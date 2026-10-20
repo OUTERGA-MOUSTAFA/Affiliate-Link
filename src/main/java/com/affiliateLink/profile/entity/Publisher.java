@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 @Entity 
 @Table(name = "profile_publishers")
 @PrimaryKeyJoinColumn(name = "id")
-public class Publisher {
+public class Publisher extends Profile {
     @Id 
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;

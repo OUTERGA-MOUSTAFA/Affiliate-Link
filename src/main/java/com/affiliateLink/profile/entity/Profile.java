@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
 @Entity 
 @Table (name = "profile_profiles")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Profile {
+public abstract class Profile {
     @Id 
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
