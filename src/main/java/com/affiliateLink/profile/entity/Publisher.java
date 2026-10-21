@@ -1,12 +1,14 @@
 package com.affiliateLink.profile.entity;
 
+import org.springframework.context.annotation.Configuration;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
-
+@Configuration 
 @Entity
 @Table(name = "profile_publishers")
 @PrimaryKeyJoinColumn(name = "id")
@@ -31,7 +33,8 @@ public class Publisher extends Profile {
     public Publisher() {
     }
 
-    public Publisher(String firstName, String lastName, Niche niche, String bio, String country) {
+    public Publisher(String email, String firstName, String lastName, Niche niche, String bio, String country) {
+        super(email);
         this.firstName = firstName;
         this.lastName = lastName;
         this.niche = niche;
