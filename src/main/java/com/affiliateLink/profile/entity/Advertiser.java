@@ -10,7 +10,6 @@ import jakarta.persistence.Table;
 @PrimaryKeyJoinColumn(name = "id")
 public class Advertiser extends Profile {
 
-    
     @Column(name = "company_name", nullable = false, length = 60)
     private String nomEntreprise;
 
@@ -23,18 +22,34 @@ public class Advertiser extends Profile {
     public Advertiser() {
     }
 
-    public Advertiser(String nomEntreprise, String secteur, String siteWeb) {
+    public Advertiser(String email, String nomEntreprise, String secteur, String siteWeb) {
+        super(email);
         this.nomEntreprise = nomEntreprise;
         this.secteur = secteur;
         this.siteWeb = siteWeb;
     }
 
-    public String getNomEntreprise() { return nomEntreprise; }
-    public void setNomEntreprise(String nomEntreprise) { this.nomEntreprise = nomEntreprise; }
+    public String getNomEntreprise() {
+        return nomEntreprise;
+    }
 
-    public String getSecteur() { return secteur; }
-    public void setSecteur(String secteur) { this.secteur = secteur; }
+    public void setNomEntreprise(String nomEntreprise) {
+        this.nomEntreprise = nomEntreprise;
+    }
 
-    public String getSiteWeb() { return siteWeb; }
-    public void setSiteWeb(String siteWeb) { this.siteWeb = siteWeb; }
+    public String getSecteur() {
+        return secteur;
+    }
+
+    public void setSecteur(String secteur) {
+        this.secteur = secteur;
+    }
+
+    public String getSiteWeb() {
+        return siteWeb;
+    }
+
+    public void setSiteWeb(String siteWeb) {
+        this.siteWeb = siteWeb;
+    }
 }

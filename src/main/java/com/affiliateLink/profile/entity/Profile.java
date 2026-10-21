@@ -33,7 +33,7 @@ public abstract class Profile {
     @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
-    public Profile(Long id, String email, ProfileStatus status, LocalDateTime createdAt) {
+    public Profile(String email) {
         this.id = id;
         this.email = email;
         this.status = status.PENDING; //tout nouveau compte derict status pending
