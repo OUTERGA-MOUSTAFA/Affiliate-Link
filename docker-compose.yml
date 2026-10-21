@@ -6,9 +6,9 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: admin
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
-      - affiliatelink-data:/var/lib/postgresql/data
+      - affiliatelink-data:/var/lib/postgresql
 
 volumes:
   affiliatelink-data:

@@ -2,6 +2,8 @@ package com.affiliateLink.profile.entity;
 
 import java.time.LocalDateTime;
 
+import com.affiliateLink.common.InvalidStatusTransitionException;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -13,25 +15,33 @@ import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 
-@Entity 
-@Table (name = "profile_profiles")
+@Entity
+@Table(name = "profile_profiles")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Profile {
-    @Id 
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column (nullable = false, unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Enumerated (EnumType.STRING)
-    @Column (nullable = false, length = 20)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
     private ProfileStatus status;
 
-    @Column (name = "created_at", updatable = false, nullable = false)
+    @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
-    public Profile() {  }
+    public Profile(Long id, String email, ProfileStatus status, LocalDateTime createdAt) {
+        this.id = id;
+        this.email = email;
+        this.status = status.PENDING; //tout nouveau compte derict status pending
+        this.createdAt = createdAt.now();
+    }
+
+    public Profile() {// hada dyal jpa
+    }
 
     public Long getId() {
         return id;
@@ -48,6 +58,34 @@ public abstract class Profile {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    private void transitionTo(ProfileStatus target, ProfileStatus requiredCurrent) {
+        if (this.status != requiredCurrent) {
+            throw new InvalidStatusTransitionException(
+                "Impossible de passer de " + this.status + " à " + target +
+                " (statut requis : " + requiredCurrent + ")"
+            );
+        }
+        this.status = target;
+    }
+
+    public void activate(){
+        
+        transitionTo(ProfileStatus.ACTIVE, ProfileStatus.PENDING);
+    }
+
+    public void suspend() {
+        transitionTo(ProfileStatus.SUSPENDED, ProfileStatus.ACTIVE);
+    }
+
+    public void reactivate() {
+        transitionTo(ProfileStatus.ACTIVE, ProfileStatus.SUSPENDED);
+    }
+
 
 
 }
