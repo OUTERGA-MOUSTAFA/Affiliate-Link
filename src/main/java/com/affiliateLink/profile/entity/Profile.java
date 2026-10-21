@@ -40,7 +40,7 @@ public abstract class Profile {
         this.createdAt = createdAt.now();
     }
 
-    public Profile() {
+    public Profile() {// hada dyal jpa
     }
 
     public Long getId() {
@@ -57,18 +57,6 @@ public abstract class Profile {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setStatus(ProfileStatus status) {
-        this.status = status;
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {
