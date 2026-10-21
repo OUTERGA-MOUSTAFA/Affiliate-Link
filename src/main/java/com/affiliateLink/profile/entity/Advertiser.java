@@ -10,6 +10,7 @@ import jakarta.persistence.Table;
 @PrimaryKeyJoinColumn(name = "id")
 public class Advertiser extends Profile {
 
+    
     @Column(name = "company_name", nullable = false, length = 60)
     private String nomEntreprise;
 
