@@ -4,9 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 
@@ -14,86 +11,46 @@ import jakarta.persistence.Table;
 @Table(name = "profile_publishers")
 @PrimaryKeyJoinColumn(name = "id")
 public class Publisher extends Profile {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @Column(name = "first_name", nullable = false, length = 40)
-    private String nom;
+    private String firstName;
 
     @Column(name = "last_name", nullable = false, length = 40)
-    private String prenom;
+    private String lastName;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private Niche niche;
 
-    @Column(length = 500, nullable = false)
+    @Column(length = 500)
     private String bio;
 
     @Column(nullable = false, length = 100)
-    private String paye;
+    private String country;
 
     public Publisher() {
     }
 
-    public Publisher(Long id, String nom,
-            String prenom, Niche niche,
-            String bio, String paye) {
-        this.id = id;
-        this.nom = nom;
-        this.prenom = prenom;
+    public Publisher(String firstName, String lastName, Niche niche, String bio, String country) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.niche = niche;
         this.bio = bio;
-        this.paye = paye;
+        this.country = country;
     }
 
-    public Long getId() {
-        return id;
-    }
+    public String getFirstName() { return firstName; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getLastName() { return lastName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
 
-    public String getNom() {
-        return nom;
-    }
+    public Niche getNiche() { return niche; }
+    public void setNiche(Niche niche) { this.niche = niche; }
 
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
+    public String getBio() { return bio; }
+    public void setBio(String bio) { this.bio = bio; }
 
-    public void setPaye(String paye) {
-        this.paye = paye;
-    }
-
-    public String getPrenom() {
-        return prenom;
-    }
-
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
-
-    public Niche getNiche() {
-        return niche;
-    }
-
-    public void setNiche(Niche niche) {
-        this.niche = niche;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
-
-    public String getPaye() {
-        return paye;
-    }
-
+    public String getCountry() { return country; }
+    public void setCountry(String country) { this.country = country; }
 }

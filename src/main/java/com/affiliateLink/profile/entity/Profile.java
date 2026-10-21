@@ -2,6 +2,8 @@ package com.affiliateLink.profile.entity;
 
 import java.time.LocalDateTime;
 
+import com.affiliateLink.common.InvalidStatusTransitionException;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -34,8 +36,8 @@ public abstract class Profile {
     public Profile(Long id, String email, ProfileStatus status, LocalDateTime createdAt) {
         this.id = id;
         this.email = email;
-        this.status = status;
-        this.createdAt = createdAt;
+        this.status = status.PENDING; //tout nouveau compte derict status pending
+        this.createdAt = createdAt.now();
     }
 
     public Profile() {
@@ -72,5 +74,30 @@ public abstract class Profile {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    private void transitionTo(ProfileStatus target, ProfileStatus requiredCurrent) {
+        if (this.status != requiredCurrent) {
+            throw new InvalidStatusTransitionException(
+                "Impossible de passer de " + this.status + " à " + target +
+                " (statut requis : " + requiredCurrent + ")"
+            );
+        }
+        this.status = target;
+    }
+
+    public void activate(){
+        
+        transitionTo(ProfileStatus.ACTIVE, ProfileStatus.PENDING);
+    }
+
+    public void suspend() {
+        transitionTo(ProfileStatus.SUSPENDED, ProfileStatus.ACTIVE);
+    }
+
+    public void reactivate() {
+        transitionTo(ProfileStatus.ACTIVE, ProfileStatus.SUSPENDED);
+    }
+
+
 
 }
