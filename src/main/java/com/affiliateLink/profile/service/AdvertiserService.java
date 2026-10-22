@@ -1,5 +1,7 @@
 package com.affiliateLink.profile.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.affiliateLink.common.DuplicateEmailException;
@@ -31,5 +33,15 @@ public class AdvertiserService {
                 request.secteur(),
                 request.siteWeb());
         return advertiserRepository.save(advertiser);
+    }
+
+    public List<Advertiser> findAll(){
+        return advertiserRepository.findAll();
+    }
+
+    public Advertiser findById(Long id){
+        
+        return advertiserRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Advertiser introuvable avec l'id : " + id));
     }
 }
