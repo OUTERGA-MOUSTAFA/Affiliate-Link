@@ -6,5 +6,4 @@ import com.affiliateLink.profile.entity.Publisher;
 
 public interface PublisherRepository extends JpaRepository <Publisher, Long>{
     
-
 }
