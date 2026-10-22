@@ -33,11 +33,10 @@ public abstract class Profile {
     @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
-    public Profile(String email) {
-        this.id = id;
+    protected Profile(String email) {
         this.email = email;
-        this.status = status.PENDING; //tout nouveau compte derict status pending
-        this.createdAt = createdAt.now();
+        this.status = ProfileStatus.PENDING;
+        this.createdAt = LocalDateTime.now();
     }
 
     public Profile() {// hada dyal jpa
@@ -59,22 +58,17 @@ public abstract class Profile {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
     private void transitionTo(ProfileStatus target, ProfileStatus requiredCurrent) {
         if (this.status != requiredCurrent) {
             throw new InvalidStatusTransitionException(
-                "Impossible de passer de " + this.status + " à " + target +
-                " (statut requis : " + requiredCurrent + ")"
-            );
+                    "Impossible de passer de " + this.status + " à " + target +
+                            " (statut requis : " + requiredCurrent + ")");
         }
         this.status = target;
     }
 
-    public void activate(){
-        
+    public void activate() {
+
         transitionTo(ProfileStatus.ACTIVE, ProfileStatus.PENDING);
     }
 
@@ -85,7 +79,5 @@ public abstract class Profile {
     public void reactivate() {
         transitionTo(ProfileStatus.ACTIVE, ProfileStatus.SUSPENDED);
     }
-
-
 
 }
