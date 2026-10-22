@@ -1,5 +1,3 @@
 package com.affiliateLink.common;
 
-public record ErrorResponse(String message) {
-    
-}
+public record ErrorResponse(String message) {}
