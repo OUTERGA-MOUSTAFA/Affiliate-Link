@@ -16,7 +16,6 @@ import com.affiliateLink.profile.dto.PublisherResponse;
 import com.affiliateLink.profile.service.PublisherService;
 
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/api")
@@ -28,23 +27,22 @@ public class PublisherController {
         this.publisherService = publisherService;
     }
 
-    @GetMapping ("/publisher/{id}")
-    // @ResponseStatus (HttpStatus.OK)
-    public PublisherResponse getPublisher(@PathVariable Long id) {
-        return PublisherResponse.from(publisherService.findById(id));
-    }
-
-    @GetMapping ("/publishers")
-    // @ResponseStatus (HttpStatus.OK)
-    public List<PublisherResponse> getAllPublisher() {
-        return publisherService.findAll().stream().map(PublisherResponse::from).toList();
-    }
-
-    @PostMapping("/publisher")
+     @PostMapping("/publisher")
     @ResponseStatus(HttpStatus.CREATED)
-    public PublisherResponse createPublisher(@Valid @RequestBody PublisherCreateRequest request) {
+    public PublisherResponse create(@Valid @RequestBody PublisherCreateRequest request) {
         return PublisherResponse.from(publisherService.create(request));
     }
 
+    @GetMapping("publishers")
+    public List<PublisherResponse> findAll() {
+        return publisherService.findAll().stream()
+                .map(PublisherResponse::from)
+                .toList();
+    }
+
+    @GetMapping("/publisher/{id}")
+    public PublisherResponse findById(@PathVariable Long id) {
+        return PublisherResponse.from(publisherService.findById(id));
+    }
    
 }
