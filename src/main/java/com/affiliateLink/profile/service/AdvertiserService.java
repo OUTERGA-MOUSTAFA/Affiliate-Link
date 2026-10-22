@@ -24,7 +24,7 @@ public class AdvertiserService {
     public Advertiser creaAdvertiser(AdvertiserCreateRequest request) {
 
         if (profileRepository.existsByEmail(request.email())) {
-            throw new DuplicateEmailException();
+           throw new DuplicateEmailException("Un compte existe déjà avec l'email : " + request.email());
         }
 
         Advertiser advertiser = new Advertiser(

@@ -26,7 +26,7 @@ public class PublisherService {
 
         //check unicité (publishers + advertisers)
         if (profileRepository.existsByEmail(request.email())) {
-            throw new DuplicateEmailException();
+           throw new DuplicateEmailException("Un compte existe déjà avec l'email : " + request.email());
         }
         Publisher publisher = new Publisher(
                 request.email(), request.firstName(), request.lastName(),
