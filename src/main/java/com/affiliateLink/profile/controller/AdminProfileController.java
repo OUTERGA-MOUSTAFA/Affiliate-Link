@@ -1,15 +1,25 @@
 package com.affiliateLink.profile.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.affiliateLink.common.InvalidStatusTransitionException;
+import com.affiliateLink.common.ResourceNotFoundException;
+import com.affiliateLink.profile.dto.StatusUpdateRequest;
 import com.affiliateLink.profile.entity.Profile;
 import com.affiliateLink.profile.entity.ProfileStatus;
+import com.affiliateLink.profile.repository.ProfileRepository;
 
-@RestController 
-@RequestMapping ("/api/admin")
+import jakarta.validation.Valid;
+
+@RestController
+@RequestMapping("/api/admin")
 public class AdminProfileController {
     // Profile profile = profileRepository.findById(id)
     // .orElseThrow(() -> new ResourceNotFoundException("Profil introuvable"));
@@ -17,20 +27,39 @@ public class AdminProfileController {
     // switch(requestedStatus)
     // {
     // case ACTIVE -> {
-    //     if (profile.getStatus() == ProfileStatus.PENDING) profile.activate();
-    //     else profile.reactivate();  // vient de SUSPENDED
+    // if (profile.getStatus() == ProfileStatus.PENDING) profile.activate();
+    // else profile.reactivate(); // vient de SUSPENDED
     // }
     // case SUSPENDED -> profile.suspend();
-    // default -> throw new InvalidStatusTransitionException("Transition non supportée");
+    // default -> throw new InvalidStatusTransitionException("Transition non
+    // supportée");
 
     private final ProfileRepository profileRepository;
-    public AdminProfileController(ProfileRepository profileRepository){
+
+    public AdminProfileController(ProfileRepository profileRepository) {
         this.profileRepository = profileRepository;
     }
 
+    @PatchMapping("/profiles/{id}/status")
+    public ResponseEntity<Void> updateStatus(@PathVariable Long id, @RequestBody StatusUpdateRequest request) {
+        Profile profile = profileRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Profil introuvable"));
 
-    @PatchMapping ("/profiles/{id}/status")
-    public {
-        return "Patch request Mostafa";
+        switch (request.status()) {
+            case ACTIVE:
+                if (profile.getStatus() == ProfileStatus.PENDING) {
+                    profile.activate();
+                } else {
+                    profile.reactivate();
+                }
+                break;
+            case SUSPENDED:
+                profile.suspend();
+                break;
+
+            default:
+                throw new InvalidStatusTransitionException("Transition non supportée");
+        }
+        return ResponseEntity.noContent().build();
     }
 }
