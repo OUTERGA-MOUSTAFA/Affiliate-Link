@@ -1,0 +1,193 @@
+{
+  "info": {
+    "_postman_id": "88dc4136-a2f3-4cea-9134-b94b0324d200",
+    "name": "Affiliate Link",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53288852",
+    "_collection_link": "https://go.postman.co/collection/53288852-88dc4136-a2f3-4cea-9134-b94b0324d200?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "create compte publisher",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"AliBenBrahim@mail.com\",\r\n  \"firstName\": \"Ali\",\r\n  \"lastName\": \"Ben Brahim\",\r\n  \"niche\": \"TECH\",\r\n  \"bio\": \"Créateur de contenu tech\",\r\n  \"country\": \"France\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/publisher",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "publisher"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "array Publishers",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/publishers",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "publishers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "publisher",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/publisher/2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "publisher",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "array Advertisers",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/advertisers",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "advertisers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Advertiser",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/advertiser/3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "advertiser",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "create compt advertiser",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"not-an-email\",\r\n  \"nomEntreprise\": \"\",\r\n  \"secteur\": \"Tech\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/advertiser",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "advertiser"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Modifier Status par Admin",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"status\": \"ACTIVE\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/admin/profiles/1/status",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "admin",
+            "profiles",
+            "1",
+            "status"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
