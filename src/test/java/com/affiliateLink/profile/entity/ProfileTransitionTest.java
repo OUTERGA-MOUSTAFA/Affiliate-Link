@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProfileTransitionTest {
 
     private Publisher newPendingPublisher() {
-        return new Publisher("test@mail.com", "Ahmed", "Ben", Niche.TECH, "bio", "Maroc");
+        return new Publisher("test@mail.com", "Redouane", "Ben", Niche.TECH, "bio", "Maroc");
     }
 
     @Test

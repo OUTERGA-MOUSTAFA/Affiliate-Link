@@ -30,7 +30,7 @@ class ProfileIntegrationTest {
         String body = """
                 {
                   "email": "integration.test1@mail.com",
-                  "firstName": "Ahmed",
+                  "firstName": "Redouane",
                   "lastName": "Benali",
                   "niche": "TECH",
                   "bio": "bio test",
@@ -38,7 +38,7 @@ class ProfileIntegrationTest {
                 }
                 """;
 
-        mockMvc.perform(post("/api/publishers")
+        mockMvc.perform(post("/api/publisher")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isCreated())
@@ -51,7 +51,7 @@ class ProfileIntegrationTest {
         String body = """
                 {
                   "email": "integration.test2@mail.com",
-                  "firstName": "Ahmed",
+                  "firstName": "Said",
                   "lastName": "Benali",
                   "niche": "TECH",
                   "bio": "bio",
@@ -60,13 +60,13 @@ class ProfileIntegrationTest {
                 """;
 
         // première création : OK
-        mockMvc.perform(post("/api/publishers")
+        mockMvc.perform(post("/api/publisher")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isCreated());
 
         // deuxième création, même email : conflit
-        mockMvc.perform(post("/api/publishers")
+        mockMvc.perform(post("/api/publisher")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isConflict())
@@ -85,7 +85,7 @@ class ProfileIntegrationTest {
                 }
                 """;
 
-        mockMvc.perform(post("/api/publishers")
+        mockMvc.perform(post("/api/publisher")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isBadRequest());
@@ -105,7 +105,7 @@ class ProfileIntegrationTest {
                 }
                 """;
 
-        MvcResult createResult = mockMvc.perform(post("/api/publishers")
+        MvcResult createResult = mockMvc.perform(post("/api/publisher")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createBody))
                 .andExpect(status().isCreated())
@@ -146,7 +146,7 @@ class ProfileIntegrationTest {
                 }
                 """;
 
-        MvcResult createResult = mockMvc.perform(post("/api/publishers")
+        MvcResult createResult = mockMvc.perform(post("/api/publisher")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createBody))
                 .andExpect(status().isCreated())
