@@ -9,7 +9,7 @@
 <h1 align="center">AffiliateLink — Module Profile</h1>
 
 <p align="center">
-  <a href="./README.en.md">🇬🇧 English version</a>
+  <a href="README.en.md">🇬🇧 English version</a>
 </p>
 
 Module **profile** de la plateforme d'affiliation AffiliateLink. Il gère l'identité de tous les acteurs de la plateforme (publishers et advertisers) et leur cycle de validation par un administrateur. Aucune offre ni aucune affiliation ne peut exister sans un compte dont le profil a été validé.
@@ -252,9 +252,9 @@ Depuis l'image `postgres:18`, monter le volume sur `/var/lib/postgresql` (et non
 
 ## Tests
 
-bash
+```bash
 ./mvnw test
-
+```
 ---
 
-<p align="center"><sub>Sprint 3 — Brief 2 · AffiliateLink</sub></p>
+<p align="center"><sub>Sprint 3 — Brief 2 · AffiliateLink ·  OUTERGA MOUSTAFA</sub></p>
