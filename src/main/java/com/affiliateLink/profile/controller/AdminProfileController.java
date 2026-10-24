@@ -15,6 +15,7 @@ import com.affiliateLink.profile.dto.StatusUpdateRequest;
 import com.affiliateLink.profile.entity.Profile;
 import com.affiliateLink.profile.entity.ProfileStatus;
 import com.affiliateLink.profile.repository.ProfileRepository;
+import com.affiliateLink.profile.service.AdminProfileService;
 
 import jakarta.validation.Valid;
 
@@ -34,32 +35,45 @@ public class AdminProfileController {
     // default -> throw new InvalidStatusTransitionException("Transition non
     // supportée");
 
-    private final ProfileRepository profileRepository;
+    // private final ProfileRepository profileRepository;
 
-    public AdminProfileController(ProfileRepository profileRepository) {
-        this.profileRepository = profileRepository;
+
+    // public AdminProfileController(ProfileRepository profileRepository) {
+    //     this.profileRepository = profileRepository;
+    // }
+
+    private final AdminProfileService adminProfileService;
+    public AdminProfileController(AdminProfileService adminProfileService){
+        this.adminProfileService = adminProfileService;
     }
-
     @PatchMapping("/profiles/{id}/status")
-    public ResponseEntity<Void> updateStatus(@PathVariable Long id, @RequestBody StatusUpdateRequest request) {
-        Profile profile = profileRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Profil introuvable"));
+    // public ResponseEntity<Void> updateStatus(@PathVariable Long id, @RequestBody StatusUpdateRequest request) {
+    //     Profile profile = profileRepository.findById(id)
+    //             .orElseThrow(() -> new ResourceNotFoundException("Profil introuvable"));
 
-        switch (request.status()) {
-            case ACTIVE:
-                if (profile.getStatus() == ProfileStatus.PENDING) {
-                    profile.activate();
-                } else {
-                    profile.reactivate();
-                }
-                break;
-            case SUSPENDED:
-                profile.suspend();
-                break;
+        // switch (request.status()) {
+        //     case ACTIVE:
+        //         if (profile.getStatus() == ProfileStatus.PENDING) {
+        //             profile.activate();
+        //         } else {
+        //             profile.reactivate();
+        //         }
+        //         break;
+        //     case SUSPENDED:
+        //         profile.suspend();
+        //         break;
 
-            default:
-                throw new InvalidStatusTransitionException("Transition non supportée");
-        }
+        //     default:
+        //         throw new InvalidStatusTransitionException("Transition non supportée");
+        // }
+        
+    //     return ResponseEntity.noContent().build();
+    // }
+    public ResponseEntity<Void>updateStatus(@PathVariable Long id, @RequestBody StatusUpdateRequest request){
+        adminProfileService.updateStatus(id, request.status());
         return ResponseEntity.noContent().build();
     }
+
+
+
 }
