@@ -6,7 +6,11 @@ spring:
     compose:
       enabled: true
       lifecycle-management: start-and-stop
-  
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5433/affiliatelink
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: validate
