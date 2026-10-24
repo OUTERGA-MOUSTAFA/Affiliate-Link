@@ -1,9 +1,6 @@
-package com.affiliateLink.profile;
+package com.affiliateLink.profile.entity;
 
 import com.affiliateLink.common.InvalidStatusTransitionException;
-import com.affiliateLink.profile.entity.Niche;
-import com.affiliateLink.profile.entity.ProfileStatus;
-import com.affiliateLink.profile.entity.Publisher;
 
 import org.junit.jupiter.api.Test;
 
