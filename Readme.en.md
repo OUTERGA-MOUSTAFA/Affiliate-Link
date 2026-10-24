@@ -252,9 +252,9 @@ Starting with the `postgres:18` image, mount the volume on `/var/lib/postgresql`
 
 ## Tests
 
-bash
+```bash
 ./mvnw test
-
+```
 ---
 
 <p align="center"><sub>Sprint 3 — Brief 2 · AffiliateLink</sub></p>
