@@ -35,44 +35,44 @@ public class AdminProfileController {
     // default -> throw new InvalidStatusTransitionException("Transition non
     // supportée");
 
-    private final ProfileRepository profileRepository;
+    // private final ProfileRepository profileRepository;
 
 
-    public AdminProfileController(ProfileRepository profileRepository) {
-        this.profileRepository = profileRepository;
-    }
-
-    // private final AdminProfileService adminProfileService;
-    // public AdminProfileController(AdminProfileService adminProfileService){
-    //     this.adminProfileService = adminProfileService;
+    // public AdminProfileController(ProfileRepository profileRepository) {
+    //     this.profileRepository = profileRepository;
     // }
-    @PatchMapping("/profiles/{id}/status")
-    public ResponseEntity<Void> updateStatus(@PathVariable Long id, @RequestBody StatusUpdateRequest request) {
-        Profile profile = profileRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Profil introuvable"));
 
-        switch (request.status()) {
-            case ACTIVE:
-                if (profile.getStatus() == ProfileStatus.PENDING) {
-                    profile.activate();
-                } else {
-                    profile.reactivate();
-                }
-                break;
-            case SUSPENDED:
-                profile.suspend();
-                break;
-
-            default:
-                throw new InvalidStatusTransitionException("Transition non supportée");
-        }
-        
-        return ResponseEntity.noContent().build();
+    private final AdminProfileService adminProfileService;
+    public AdminProfileController(AdminProfileService adminProfileService){
+        this.adminProfileService = adminProfileService;
     }
-    // public ResponseEntity<Void>updateStatus(@PathVariable Long id, @RequestBody StatusUpdateRequest request){
-    //     adminProfileService.updateStatus(id, request.status());
+    @PatchMapping("/profiles/{id}/status")
+    // public ResponseEntity<Void> updateStatus(@PathVariable Long id, @RequestBody StatusUpdateRequest request) {
+    //     Profile profile = profileRepository.findById(id)
+    //             .orElseThrow(() -> new ResourceNotFoundException("Profil introuvable"));
+
+        // switch (request.status()) {
+        //     case ACTIVE:
+        //         if (profile.getStatus() == ProfileStatus.PENDING) {
+        //             profile.activate();
+        //         } else {
+        //             profile.reactivate();
+        //         }
+        //         break;
+        //     case SUSPENDED:
+        //         profile.suspend();
+        //         break;
+
+        //     default:
+        //         throw new InvalidStatusTransitionException("Transition non supportée");
+        // }
+        
     //     return ResponseEntity.noContent().build();
     // }
+    public ResponseEntity<Void>updateStatus(@PathVariable Long id, @RequestBody StatusUpdateRequest request){
+        adminProfileService.updateStatus(id, request.status());
+        return ResponseEntity.noContent().build();
+    }
 
 
 
