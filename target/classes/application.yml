@@ -1,7 +1,11 @@
 spring:
   application:
     name: affiliatelink
-  
+  modulith:
+    events:
+      jdbc:
+        schema-initialization:
+          enabled: false
   docker:
     compose:
       enabled: true
