@@ -1,8 +1,9 @@
-CREATE TABLE event_publication(
-    id BIGINT PRIMARY KEY REFERENCES event_events(id),
-    publisher_id BIGINT NOT NULL REFERENCES profile_publishers(id),
-    advertiser_id BIGINT NOT NULL REFERENCES profile_advertisers(id),
-    publication_date TIMESTAMP NOT NULL,
-    publication_status VARCHAR(20) NOT NULL
-          CHECK (publication_status IN ('PENDING', 'APPROVED', 'REJECTED'))
+CREATE TABLE IF NOT EXISTS event_publication (
+    id                UUID NOT NULL,
+    listener_id       VARCHAR(512) NOT NULL,
+    event_type        VARCHAR(512) NOT NULL,
+    serialized_event  VARCHAR(4000) NOT NULL,
+    publication_date  TIMESTAMP(9) WITH TIME ZONE NOT NULL,
+    completion_date   TIMESTAMP(9) WITH TIME ZONE,
+    PRIMARY KEY (id)
 );
