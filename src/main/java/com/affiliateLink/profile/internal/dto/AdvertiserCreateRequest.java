@@ -1,4 +1,4 @@
-package com.affiliateLink.internal.profile.dto;
+package com.affiliateLink.profile.internal.dto;
 
 import org.hibernate.validator.constraints.Length;
 

@@ -1,4 +1,4 @@
-package com.affiliateLink.internal.profile.controller;
+package com.affiliateLink.profile.internal.controller;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.affiliateLink.internal.profile.dto.AdvertiserCreateRequest;
-import com.affiliateLink.internal.profile.dto.AdvertiserResponse;
-import com.affiliateLink.internal.profile.service.AdvertiserService;
+import com.affiliateLink.profile.internal.dto.AdvertiserCreateRequest;
+import com.affiliateLink.profile.internal.dto.AdvertiserResponse;
+import com.affiliateLink.profile.internal.service.AdvertiserService;
 
 import jakarta.validation.Valid;
 

@@ -1,12 +1,12 @@
-package com.affiliateLink.internal.profile.service;
+package com.affiliateLink.profile.internal.service;
 
 import org.springframework.stereotype.Service;
 
 import com.affiliateLink.common.InvalidStatusTransitionException;
 import com.affiliateLink.common.ResourceNotFoundException;
-import com.affiliateLink.internal.profile.entity.Profile;
-import com.affiliateLink.internal.profile.entity.ProfileStatus;
-import com.affiliateLink.internal.profile.repository.ProfileRepository;
+import com.affiliateLink.profile.internal.entity.Profile;
+import com.affiliateLink.profile.internal.entity.ProfileStatus;
+import com.affiliateLink.profile.internal.repository.ProfileRepository;
 
 @Service 
 public class AdminProfileService {

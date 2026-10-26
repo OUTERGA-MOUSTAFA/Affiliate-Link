@@ -1,14 +1,14 @@
-package com.affiliateLink.internal.profile.service;
+package com.affiliateLink.profile.internal.service;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.affiliateLink.common.DuplicateEmailException;
-import com.affiliateLink.internal.profile.dto.AdvertiserCreateRequest;
-import com.affiliateLink.internal.profile.entity.Advertiser;
-import com.affiliateLink.internal.profile.repository.AdvertiserRepository;
-import com.affiliateLink.internal.profile.repository.ProfileRepository;
+import com.affiliateLink.profile.internal.dto.AdvertiserCreateRequest;
+import com.affiliateLink.profile.internal.entity.Advertiser;
+import com.affiliateLink.profile.internal.repository.AdvertiserRepository;
+import com.affiliateLink.profile.internal.repository.ProfileRepository;
 
 @Service
 public class AdvertiserService {

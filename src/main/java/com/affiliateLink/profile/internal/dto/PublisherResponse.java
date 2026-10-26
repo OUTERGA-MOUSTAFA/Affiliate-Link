@@ -1,10 +1,10 @@
-package com.affiliateLink.internal.profile.dto;
+package com.affiliateLink.profile.internal.dto;
 
 import java.time.LocalDateTime;
 
-import com.affiliateLink.internal.profile.entity.Niche;
-import com.affiliateLink.internal.profile.entity.ProfileStatus;
-import com.affiliateLink.internal.profile.entity.Publisher;
+import com.affiliateLink.profile.internal.entity.Niche;
+import com.affiliateLink.profile.internal.entity.ProfileStatus;
+import com.affiliateLink.profile.internal.entity.Publisher;
 
 public record PublisherResponse(Long id,
         String email,

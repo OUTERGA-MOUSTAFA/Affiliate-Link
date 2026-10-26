@@ -1,4 +1,4 @@
-package com.affiliateLink.internal.profile.controller;
+package com.affiliateLink.profile.internal.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -11,11 +11,11 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.affiliateLink.common.InvalidStatusTransitionException;
 import com.affiliateLink.common.ResourceNotFoundException;
-import com.affiliateLink.internal.profile.dto.StatusUpdateRequest;
-import com.affiliateLink.internal.profile.entity.Profile;
-import com.affiliateLink.internal.profile.entity.ProfileStatus;
-import com.affiliateLink.internal.profile.repository.ProfileRepository;
-import com.affiliateLink.internal.profile.service.AdminProfileService;
+import com.affiliateLink.profile.internal.dto.StatusUpdateRequest;
+import com.affiliateLink.profile.internal.entity.Profile;
+import com.affiliateLink.profile.internal.entity.ProfileStatus;
+import com.affiliateLink.profile.internal.repository.ProfileRepository;
+import com.affiliateLink.profile.internal.service.AdminProfileService;
 
 import jakarta.validation.Valid;
 

@@ -1,9 +1,9 @@
-package com.affiliateLink.internal.profile.dto;
+package com.affiliateLink.profile.internal.dto;
 
 import java.time.LocalDateTime;
 
-import com.affiliateLink.internal.profile.entity.Advertiser;
-import com.affiliateLink.internal.profile.entity.ProfileStatus;
+import com.affiliateLink.profile.internal.entity.Advertiser;
+import com.affiliateLink.profile.internal.entity.ProfileStatus;
 
 public record AdvertiserResponse(
        Long id,

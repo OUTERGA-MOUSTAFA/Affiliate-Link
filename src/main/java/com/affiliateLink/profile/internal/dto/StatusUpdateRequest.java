@@ -1,8 +1,8 @@
-package com.affiliateLink.internal.profile.dto;
+package com.affiliateLink.profile.internal.dto;
 
 import org.jspecify.annotations.NonNull;
 
-import com.affiliateLink.internal.profile.entity.ProfileStatus;
+import com.affiliateLink.profile.internal.entity.ProfileStatus;
 
 public record StatusUpdateRequest (@NonNull ProfileStatus status){
     
