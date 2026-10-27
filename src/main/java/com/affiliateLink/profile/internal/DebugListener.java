@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class DebugListener {
 
     // test event 
-    @ApplicationModuleListener
+    @ApplicationModuleListener // kaykhdem after commit dyale @Transactional
     public void on(ProfileSuspended event) {
         System.out.println(">>> ProfileSuspended reçu pour profileId=" + event.profileId());
     }
