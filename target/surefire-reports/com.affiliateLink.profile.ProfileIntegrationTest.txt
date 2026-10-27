@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.affiliateLink.profile.ProfileIntegrationTest
--------------------------------------------------------------------------------
-Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.055 s -- in com.affiliateLink.profile.ProfileIntegrationTest
