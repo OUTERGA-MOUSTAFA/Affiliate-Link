@@ -1,9 +1,6 @@
 package com.affiliateLink.profile;
 
 import java.util.Optional;
-
-import com.affiliateLink.common.ResourceNotFoundException;
-
 public interface ProfileApi {
 
     // Optional<AdvertiserInfo> advertiser = profileApi.getAdvertiser(advertiserId);
