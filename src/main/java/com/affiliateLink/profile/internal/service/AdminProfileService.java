@@ -24,7 +24,7 @@ public class AdminProfileService {
     // Le listener de ProfileSuspended s’exécute après 
     // la validation de la transaction du module profile, 
     // dans sa propre transaction.
-    @Transactional 
+    @Transactional // save event f event_publication 
     public void updateStatus(Long id, ProfileStatus targetStatus){
         Profile profile = profileRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Profil introuvable avec l'id : " + id));
 

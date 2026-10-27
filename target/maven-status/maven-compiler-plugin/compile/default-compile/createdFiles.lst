@@ -5,7 +5,10 @@ com\affiliateLink\profile\internal\dto\AdvertiserCreateRequest.class
 com\affiliateLink\profile\internal\dto\StatusUpdateRequest.class
 com\affiliateLink\profile\ProfileApi.class
 com\affiliateLink\profile\internal\repository\ProfileRepository.class
+com\affiliateLink\profile\internal\service\ProfileApiImpl.class
 com\affiliateLink\common\DuplicateEmailException.class
+com\affiliateLink\profile\internal\DebugListener.class
+com\affiliateLink\profile\ProfileSuspended.class
 com\affiliateLink\profile\internal\entity\Niche.class
 com\affiliateLink\profile\internal\service\PublisherService.class
 com\affiliateLink\profile\internal\dto\PublisherCreateRequest.class
