@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- الاسم -spring كيخلي Spring Boot هو اللي يقرا الملف، وهكا تقدر تستعمل <springProfile> -->
+<configuration>
+
+    <!-- patterns are ready of Spring Boot: CONSOLE_LOG_PATTERN و FILE_LOG_PATTERN -->
+    <!-- Paterne dyale springboot (threads, level, date)-->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <property name="LOG_DIR" value="logs"/>
+    <property name="LOG_NAME" value="affiliatelink"/>
+
+    <!-- 1) console -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 2)file avec rotation -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${LOG_NAME}.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/archived/${LOG_NAME}.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--كيكتب فـ الجوج -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+    <!-- debug f dev o prod-->
+    <springProfile name="!prod">
+        <logger name="com.affiliateLink" level="DEBUG"/>
+    </springProfile>
+
+</configuration>
