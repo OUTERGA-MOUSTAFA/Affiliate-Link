@@ -12,7 +12,7 @@ CREATE Table IF NOT EXISTS offer_campaigns(
 
     CONSTRAINT chk_campaign_dates  CHECK (end_date > start_date),
     CONSTRAINT chk_campaign_percent CHECK (payout_model <> 'CPA_PERCENT' OR payout_value <= 100)
-);
+); 
 CREATE INDEX idx_offer_campaigns_offer  ON offer_campaigns (offer_id);
 CREATE INDEX idx_offer_campaigns_status ON offer_campaigns (status);
 
