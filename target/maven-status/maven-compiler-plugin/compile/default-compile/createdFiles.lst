@@ -10,9 +10,11 @@ com\affiliateLink\common\DuplicateEmailException.class
 com\affiliateLink\profile\internal\DebugListener.class
 com\affiliateLink\profile\ProfileSuspended.class
 com\affiliateLink\profile\internal\entity\Niche.class
+com\affiliateLink\offer\OfferApi.class
 com\affiliateLink\profile\internal\service\PublisherService.class
 com\affiliateLink\profile\internal\dto\PublisherCreateRequest.class
 com\affiliateLink\profile\internal\service\AdvertiserService.class
+com\affiliateLink\offer\internal\mapper\TestMapperImpl.class
 com\affiliateLink\common\ErrorResponse.class
 com\affiliateLink\profile\internal\entity\Advertiser.class
 com\affiliateLink\profile\internal\entity\Profile.class
@@ -28,5 +30,6 @@ com\affiliateLink\profile\internal\entity\ProfileStatus.class
 com\affiliateLink\profile\internal\dto\PublisherResponse.class
 com\affiliateLink\profile\internal\service\AdminProfileService$1.class
 com\affiliateLink\profile\internal\controller\AdminProfileController.class
+com\affiliateLink\offer\internal\mapper\TestMapper.class
 com\affiliateLink\profile\internal\entity\Publisher.class
 com\affiliateLink\profile\internal\controller\AdvertiserController.class
