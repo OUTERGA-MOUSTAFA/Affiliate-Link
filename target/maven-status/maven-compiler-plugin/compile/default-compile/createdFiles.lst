@@ -27,6 +27,7 @@ com\affiliateLink\profile\internal\repository\PublisherRepository.class
 com\affiliateLink\profile\internal\entity\ProfileStatus.class
 com\affiliateLink\profile\internal\dto\PublisherResponse.class
 com\affiliateLink\profile\internal\service\AdminProfileService$1.class
+com\affiliateLink\offer\api\OfferApi.class
 com\affiliateLink\profile\internal\controller\AdminProfileController.class
 com\affiliateLink\profile\internal\entity\Publisher.class
 com\affiliateLink\profile\internal\controller\AdvertiserController.class
