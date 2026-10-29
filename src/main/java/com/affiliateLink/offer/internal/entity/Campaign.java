@@ -90,6 +90,7 @@ public class Campaign {
     }
 
     // DRAFT -> ACTIVE أو PAUSED -> ACTIVE
+    // f service campaign.activate()
     public void activate() {
         if (status != CampaignStatus.DRAFT && status != CampaignStatus.PAUSED) {
             throw invalidTransition(CampaignStatus.ACTIVE);
@@ -121,7 +122,7 @@ public class Campaign {
     }
 
     // package-private: كيناديه غير Offer.addCampaign() (نفس الـ package)
-    void setOffer(Offer offer) {
+    public void setOffer(Offer offer) {
         this.offer = offer;
     }
 
