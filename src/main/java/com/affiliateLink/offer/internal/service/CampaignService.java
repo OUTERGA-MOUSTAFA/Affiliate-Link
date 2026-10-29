@@ -24,32 +24,35 @@ public class CampaignService {
         this.campaignRepository = campaignRepository;
     }
 
-    @Transactional 
-    public void changeStatus(Long campingnId, CampaignStatus targeStatus){
+    @Transactional
+    public void changeStatus(Long campingnId, CampaignStatus targeStatus) {
 
         Campaign campaign = campaignRepository.findById(campingnId).orElseThrow(
-                ()-> new ResourceNotFoundException("Campaign not found: " + campingnId)
-        );
+                () -> new ResourceNotFoundException("Campaign not found: " + campingnId));
 
         switch (targeStatus) {
-            case ACTIVE-> activate(campaign);
-            case PAUSED -> pause();
-            case ENDED -> end();        
-            default: new InvalidStatusTransitionException("A campaign cannot go back to " + targeStatus);
+            case ACTIVE -> activate(campaign);
+            // case PAUSED -> pause();
+            // case ENDED -> end();
+            default -> new InvalidStatusTransitionException("A campaign cannot go back to " + targeStatus);
         }
         log.info("Campaign {} is now {}", campingnId, campaign.getStatus());
     }
 
-
+    // هذه الدالة تحتوي على شروط (Validations)، فإذا كان التاريخ قد فات أو الانتقال
+    // ممنوع، فإنها ترمي استثناءً (Exception).
     private void activate(Campaign campaign) {
         campaignRepository.findByOfferIdAndStatus(campaign.getOffer().getId(), CampaignStatus.ACTIVE)
                 .filter(current -> !current.getId().equals(campaign.getId()))
                 .ifPresent(current -> {
                     current.pause();
-                    campaignRepository.saveAndFlush(current);   // خاصها تتكتب قبل الجديدة
+                    campaignRepository.saveAndFlush(current); // إلى قاعدة البيانات دون الانتظار حتى تنتهي الدالة تعني
+                                                              // حفظ التعديلات وإرسالها فوراً
+                    // why not save: bc hebernit يحتفظ بالتعديل في الذاكرة (تسمى Persistence
+                    // Context) till method end and transaction be seccus then send it as Commit
                     log.info("Campaign {} paused: replaced by {}", current.getId(), campaign.getId());
                 });
 
-        campaign.activate();   // كترمي exception إلا الانتقال ممنوع أو التاريخ فات
+        campaign.activate(); // كترمي exception إلا الانتقال ممنوع أو التاريخ فات
     }
 }
