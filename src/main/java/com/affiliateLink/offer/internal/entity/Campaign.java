@@ -121,7 +121,7 @@ public class Campaign {
     }
 
     // package-private: كيناديه غير Offer.addCampaign() (نفس الـ package)
-    void setOffer(Offer offer) {
+    public void setOffer(Offer offer) {
         this.offer = offer;
     }
 

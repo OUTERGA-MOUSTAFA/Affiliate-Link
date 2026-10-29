@@ -1,6 +1,7 @@
 package com.affiliateLink.offer.internal.entity;
 
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
@@ -23,6 +24,7 @@ public class Tag {
     @Column(nullable = false, length = 40, unique = true)
     private String name;
 
+    //linkin menn offer b offer.replaceTags(...)
     @ManyToMany (mappedBy = "tags")
     private Set<Offer> offers = new HashSet<>();
 
@@ -40,6 +42,11 @@ public class Tag {
         return offers;
     }
     
+
+    // وهكا "Java " و"JAVA" و"java" كلهم كيعطيو نفس الـ tag (“jamais dupliqués”)
+    public static String normalize(String rawName) {
+        return rawName.trim().toLowerCase(Locale.ROOT);// Locale.ROOT pour evité problem la langue de computer
+    }
 
     @Override
     public boolean equals(Object o) {
