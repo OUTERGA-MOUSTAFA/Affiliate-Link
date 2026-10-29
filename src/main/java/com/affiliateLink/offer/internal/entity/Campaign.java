@@ -90,6 +90,7 @@ public class Campaign {
     }
 
     // DRAFT -> ACTIVE أو PAUSED -> ACTIVE
+    // f service campaign.activate()
     public void activate() {
         if (status != CampaignStatus.DRAFT && status != CampaignStatus.PAUSED) {
             throw invalidTransition(CampaignStatus.ACTIVE);
