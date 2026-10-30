@@ -45,14 +45,14 @@ public class Offer {
     private Instant createdAt;
 
     // la relation avec table offer
-    @OneToMany (mappedBy = "Offer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Campaign> campaings = new ArrayList<>();
+    @OneToMany(mappedBy = "Offer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Campaign> campaigns = new ArrayList<>();
 
     // la relation avec table tags
-    @ManyToMany 
-    @JoinTable (name = "offer_offer_tags", 
-                joinColumns = @JoinColumn(name ="offer_id"), 
-                inverseJoinColumns = @JoinColumn (name = "tag_id"))
+    @ManyToMany
+    @JoinTable(name = "offer_offer_tags", 
+                joinColumns = @JoinColumn(name = "offer_id"), 
+                inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
 
     public Offer() {
@@ -65,10 +65,11 @@ public class Offer {
         update(title, description, landingUrl, niche);
     }
 
-    public void replaceTags(Set<Tag> newTag){
+    public void replaceTags(Set<Tag> newTag) {
         this.tags.clear();
         this.tags.addAll(newTag);
     }
+
     public void update(String title, String description, String landingUrl, String niche) {
         this.title = title;
         this.description = description;
@@ -103,13 +104,7 @@ public class Offer {
     public Instant getCreatedAt() {
         return createdAt;
     }
-
-     private List<Campaign> getCoCampaigns(){
-        return Collections.unmodifiableList(campaings);
-     }
-
-    private Set<Tag> tags(){
-        return Collections.unmodifiableSet(tags);
-    }
+public List<Campaign> getCampaigns() { return Collections.unmodifiableList(campaigns); }
+public Set<Tag> getTags()            { return Collections.unmodifiableSet(tags); }
 
 }
