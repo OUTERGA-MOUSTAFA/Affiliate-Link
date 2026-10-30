@@ -143,7 +143,16 @@ public class OfferService {
         log.debug("Offer search: niche={}, advertiserId={}, tag={}, keyword={} -> {} result(s)",
                 niche, advertiserId, tag, keyword, page.getTotalElements());
 
+        // ستعمل الدالة toSummary ديال الـ mapper". وهي نفسها كتب page.map(offer ->
+        // offerMapper.toSummary(offer))
         return PageResponse.from(page.map(offerMapper::toSummary)); // داخل الـ transaction
+        // {
+        // "content": [ ...10 عروض... ],
+        // "page": 0,
+        // "size": 10,
+        // "totalElements": 95,
+        // "totalPages": 10
+        // }
     }
 
     private void validateSort(Sort sort) {

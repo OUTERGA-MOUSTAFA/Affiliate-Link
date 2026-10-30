@@ -31,6 +31,18 @@ public class OfferController {
         this.offerService = offerService;
     }
 
+      @PostMapping
+    @ResponseStatus(HttpStatus.CREATED) // 201
+    public OfferResponse create(@Valid @RequestBody OfferCreateRequest request) {
+        return offerService.create(request);
+    }
+
+    @PutMapping("/{id}") // 200
+    public OfferResponse update(@PathVariable Long id,
+            @Valid @RequestBody OfferUpdateRequest request) {
+        return offerService.update(id, request);
+    }
+    
     @GetMapping("/api/offres")
     public PageResponse<OfferSummaryResponse> search(
             @RequestParam(required = false) Niche niche,
@@ -46,15 +58,5 @@ public class OfferController {
         return offerService.getById(id);
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED) // 201
-    public OfferResponse create(@Valid @RequestBody OfferCreateRequest request) {
-        return offerService.create(request);
-    }
-
-    @PutMapping("/{id}") // 200
-    public OfferResponse update(@PathVariable Long id,
-            @Valid @RequestBody OfferUpdateRequest request) {
-        return offerService.update(id, request);
-    }
+  
 }
