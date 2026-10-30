@@ -120,6 +120,13 @@ public class OfferService {
         return offerMapper.toResponse(offer);
     }
 
+    public OfferResponse getById(Long id) {
+        Offer offer = offerRepository.findById(id)
+                .orElseThrow(() -> new /* exception 404 ديالك */ RuntimeException("Offer not found: " + id));
+
+        return offerMapper.toResponse(offer); // OfferResponse فيه الحملات (campaigns)
+    }
+
     public PageResponse<OfferSummaryResponse> search(Niche niche, Long advertiserId, String tag,
             String keyword, Pageable pageable) {
         validateSort(pageable.getSort());
