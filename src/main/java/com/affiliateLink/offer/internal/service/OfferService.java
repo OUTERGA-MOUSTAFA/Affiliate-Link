@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.affiliateLink.offer.internal.dto.OfferCreateRequest;
 import com.affiliateLink.offer.internal.dto.OfferResponse;
+import com.affiliateLink.offer.internal.dto.OfferUpdateRequest;
 import com.affiliateLink.offer.internal.entity.Offer;
 import com.affiliateLink.offer.internal.entity.Tag;
 import com.affiliateLink.offer.internal.mapper.OfferMapper;
@@ -83,5 +84,29 @@ public class OfferService {
             }
         }
         return result;
+    }
+
+    @Transactional
+    public OfferResponse update(Long offerId, OfferUpdateRequest request) {
+        // 1) العرض خاصو يكون كاين -> 404
+        Offer offer = offerRepository.findById(offerId)
+                .orElseThrow(() -> new /* exception 404 ديالك */ RuntimeException("Offer not found: " + offerId));
+
+        // 2) الـ advertiser ديال هاد العرض (من العرض، ماشي من الـ request)
+        Long advertiserId = offer.getAdvertiserId();
+        if (!profileApi.isActive(advertiserId)) {
+            log.warn("Offer update refused: advertiser {} is not active (offerId={})", advertiserId, offerId);
+            throw new /* exception 409 ديالك */ RuntimeException("Advertiser is not active");
+        }
+
+        // 3) التعديل كيتدار فـ الـ entity
+        offer.update(request.title(), request.description(), request.landingUrl(), request.niche());
+        offer.replaceTags(resolveTags(request.tags()));
+
+        // ما خاصناش offerRepository.save(): الـ entity managed، والـ dirty checking
+        // كيكتب التعديلات عند الـ commit
+        log.info("Offer updated: id={}, advertiserId={}", offerId, advertiserId);
+
+        return offerMapper.toResponse(offer);
     }
 }
