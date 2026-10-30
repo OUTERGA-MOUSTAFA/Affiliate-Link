@@ -2,6 +2,8 @@ package com.affiliateLink.profile.internal.entity;
 
 import org.springframework.context.annotation.Configuration;
 
+import com.affiliateLink.common.Niche;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

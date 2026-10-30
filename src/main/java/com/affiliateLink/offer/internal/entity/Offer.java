@@ -7,9 +7,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.affiliateLink.common.Niche;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -38,8 +43,9 @@ public class Offer {
     @Column(name = "landing_url", nullable = false, length = 500)
     private String landingUrl;
 
+    @Enumerated (EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private String niche;
+    private Niche niche;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -58,7 +64,7 @@ public class Offer {
     public Offer() {
     }
 
-    public Offer(Long advertiserId, String title, String description, String landingUrl, String niche,
+    public Offer(Long advertiserId, String title, String description, String landingUrl, Niche niche,
             Instant createdAt) {
         this.advertiserId = advertiserId;
         this.createdAt = Instant.now();
@@ -70,7 +76,7 @@ public class Offer {
         this.tags.addAll(newTag);
     }
 
-    public void update(String title, String description, String landingUrl, String niche) {
+    public void update(String title, String description, String landingUrl, Niche niche) {
         this.title = title;
         this.description = description;
         this.landingUrl = landingUrl;
@@ -97,7 +103,7 @@ public class Offer {
         return landingUrl;
     }
 
-    public String getNiche() {
+    public Niche getNiche() {
         return niche;
     }
 

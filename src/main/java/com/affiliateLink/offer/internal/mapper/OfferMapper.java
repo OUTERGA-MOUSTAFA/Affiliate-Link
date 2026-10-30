@@ -1,6 +1,6 @@
 package com.affiliateLink.offer.internal.mapper;
 
-import com.affiliateLink.offer.internal.dto.OfferRequest;
+import com.affiliateLink.offer.internal.dto.OfferCreateRequest;
 import com.affiliateLink.offer.internal.dto.OfferResponse;
 import com.affiliateLink.offer.internal.dto.OfferSummaryResponse;
 import com.affiliateLink.offer.internal.entity.Offer;
@@ -15,7 +15,7 @@ public interface OfferMapper {
     // tags و campaigns كيتعمرو فـ الـ service (كيحتاجو database)
     @Mapping(target = "tags", ignore = true)
     @Mapping(target = "campaigns", ignore = true)
-    Offer toEntity(OfferRequest request);
+    Offer toEntity(OfferCreateRequest request);
 
     OfferResponse toResponse(Offer offer);
 

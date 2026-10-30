@@ -2,7 +2,7 @@ package com.affiliateLink.profile.internal.dto;
 
 import java.time.LocalDateTime;
 
-import com.affiliateLink.profile.internal.entity.Niche;
+import com.affiliateLink.common.Niche;
 import com.affiliateLink.profile.internal.entity.ProfileStatus;
 import com.affiliateLink.profile.internal.entity.Publisher;
 
