@@ -11,7 +11,7 @@ import org.mapstruct.Mapping;
 public interface CampaignMapper {
 
     // الـ offer كيتربط من بعد بـ offer.addCampaign(...) فـ الـ service
-    Campaign toEntity(CampaignRequest request);
+    Campaign toEntity(CampaignRequest request);// hna kathewel DTO "CampaignRequest" li jaya men frontend l Campaign Entity
 
     @Mapping(target = "offerId", source = "offer.id")
     CampaignResponse toResponse(Campaign campaign);
