@@ -15,7 +15,7 @@ public final class OfferSpecifications {
     private OfferSpecifications() {
     }
 
-    /** كل باراميتر null (ولا فارغ) كيتتجاهل. */
+    // كل باراميتر null (ولا فارغ) كيتتجاهل. 
     public static Specification<Offer> search(Niche niche, Long advertiserId, String tag, String keyword) {
         Specification<Offer> spec = (root, query, cb) -> cb.conjunction();   // أصل خاوي = بلا فلتر
 
