@@ -6,18 +6,27 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.affiliateLink.common.Niche;
 import com.affiliateLink.offer.internal.dto.OfferCreateRequest;
 import com.affiliateLink.offer.internal.dto.OfferResponse;
+import com.affiliateLink.offer.internal.dto.OfferSummaryResponse;
 import com.affiliateLink.offer.internal.dto.OfferUpdateRequest;
+import com.affiliateLink.offer.internal.dto.PageResponse;
 import com.affiliateLink.offer.internal.entity.Offer;
 import com.affiliateLink.offer.internal.entity.Tag;
 import com.affiliateLink.offer.internal.mapper.OfferMapper;
 import com.affiliateLink.offer.internal.repository.OfferRepository;
+import com.affiliateLink.offer.internal.repository.OfferSpecifications;
 import com.affiliateLink.offer.internal.repository.TagRepository;
 import com.affiliateLink.profile.ProfileApi; // الجذر ديال profile: مسموح
 
@@ -27,6 +36,7 @@ public class OfferService {
 
     private static final Logger log = LoggerFactory.getLogger(OfferService.class);
 
+    private static final Set<String> SORTABLE_FIELDS = Set.of("id", "title", "niche", "createdAt", "advertiserId");
     private final OfferRepository offerRepository;
     private final TagRepository tagRepository;
     private final OfferMapper offerMapper;
@@ -108,5 +118,35 @@ public class OfferService {
         log.info("Offer updated: id={}, advertiserId={}", offerId, advertiserId);
 
         return offerMapper.toResponse(offer);
+    }
+
+    public PageResponse<OfferSummaryResponse> search(Niche niche, Long advertiserId, String tag,
+            String keyword, Pageable pageable) {
+        validateSort(pageable.getSort());
+
+        // بلا sort؟ الأحدث أولاً
+        Pageable effective = pageable.getSort().isSorted()
+                ? pageable
+                : PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+                        Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        Page<Offer> page = offerRepository.findAll(
+                OfferSpecifications.search(niche, advertiserId, tag, keyword), effective);
+
+        log.debug("Offer search: niche={}, advertiserId={}, tag={}, keyword={} -> {} result(s)",
+                niche, advertiserId, tag, keyword, page.getTotalElements());
+
+        return PageResponse.from(page.map(offerMapper::toSummary)); // داخل الـ transaction
+    }
+
+    private void validateSort(Sort sort) {
+        for (Sort.Order order : sort) {
+            if (!SORTABLE_FIELDS.contains(order.getProperty())) {
+                log.warn("Offer search refused: unsupported sort field '{}'", order.getProperty());
+                throw new /* exception 400 ديالك */ IllegalArgumentException(
+                        "Unsupported sort field: " + order.getProperty()
+                                + ". Allowed: " + SORTABLE_FIELDS);
+            }
+        }
     }
 }
