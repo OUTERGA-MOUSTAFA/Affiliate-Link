@@ -43,7 +43,7 @@ public class Offer {
     @Column(name = "landing_url", nullable = false, length = 500)
     private String landingUrl;
 
-    @Enumerated (EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private Niche niche;
 
@@ -56,9 +56,7 @@ public class Offer {
 
     // la relation avec table tags
     @ManyToMany
-    @JoinTable(name = "offer_offer_tags", 
-                joinColumns = @JoinColumn(name = "offer_id"), 
-                inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    @JoinTable(name = "offer_offer_tags", joinColumns = @JoinColumn(name = "offer_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
 
     public Offer() {
@@ -110,7 +108,17 @@ public class Offer {
     public Instant getCreatedAt() {
         return createdAt;
     }
-public List<Campaign> getCampaigns() { return Collections.unmodifiableList(campaigns); }
-public Set<Tag> getTags()            { return Collections.unmodifiableSet(tags); }
 
+    public List<Campaign> getCampaigns() {
+        return Collections.unmodifiableList(campaigns);
+    }
+
+    public Set<Tag> getTags() {
+        return Collections.unmodifiableSet(tags);
+    }
+
+    public void addCampaign(Campaign campaign) {
+        campaigns.add(campaign);
+        campaign.setOffer(this);
+    }
 }
