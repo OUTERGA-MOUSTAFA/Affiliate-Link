@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.affiliateLink.offer.internal.dto.CampaignCreateRequest;
 import com.affiliateLink.offer.internal.dto.CampaignResponse;
+import com.affiliateLink.offer.internal.dto.CampaignStatusUpdateRequest;
 import com.affiliateLink.offer.internal.dto.StatusRequest;
 import com.affiliateLink.offer.internal.service.CampaignService;
 
@@ -36,6 +37,13 @@ public class CampaignController {
     public CampaignResponse create(@PathVariable Long offerId,
             @Valid @RequestBody CampaignCreateRequest request) {
         return campaignService.create(offerId, request);
+    }
+
+     @PatchMapping("/api/campaigns/{id}/status")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateStatus(@PathVariable Long id,
+            @Valid @RequestBody CampaignStatusUpdateRequest request) {
+        campaignService.changeStatus(id, request.status());
     }
 
 }
