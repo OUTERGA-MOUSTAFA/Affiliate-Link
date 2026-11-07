@@ -97,8 +97,12 @@ public class CampaignService {
     }
 
     @Transactional(readOnly = true)
-    public List<CampaignResponse> findByStatus(CampaignStatus status) {
-        return campaignRepository.findByStatus(status).stream()
+    public List<CampaignResponse> findAll(CampaignStatus status) {
+        List<Campaign> campaigns = (status == null)
+                ? campaignRepository.findAll()
+                : campaignRepository.findByStatus(status);
+
+        return campaigns.stream()
                 .map(campaignMapper::toResponse)
                 .toList();
     }
