@@ -1,5 +1,7 @@
 package com.affiliateLink.profile.internal.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +15,8 @@ import com.affiliateLink.profile.internal.repository.ProfileRepository;
 
 @Service
 public class AdminProfileService {
+
+    private static final Logger log = LoggerFactory.getLogger(AdminProfileService.class);
 
     private final ProfileRepository profileRepository;
     private final ApplicationEventPublisher eventPublisher;
@@ -30,28 +34,37 @@ public class AdminProfileService {
         Profile profile = profileRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Profil introuvable avec l'id : " + id));
 
-        switch (targetStatus) {
-            case ACTIVE:
-                if (profile.getStatus() == ProfileStatus.PENDING) {
-                    profile.activate();
-                } else if (profile.getStatus() == ProfileStatus.SUSPENDED) {
-                    profile.reactivate();
-                } else {
-                    throw new InvalidStatusTransitionException(
-                            "Impossible de passer de " + profile.getStatus() + " à ACTIVE");
-                }
-                break;
-            case SUSPENDED:
-                profile.suspend();
-                eventPublisher.publishEvent(new ProfileSuspended(profile.getId()));// hada hewa lbo9 li kay gol l offer
-                                                                                   // o campaigin rah had advertiser id
-                                                                                   // t suspenda dire khdemtkem
-                break;
-            case PENDING:
-                throw new InvalidStatusTransitionException("Impossible de repasser un profil au statut PENDING");
-            default:
-                throw new InvalidStatusTransitionException("Transition non supportée");
+        ProfileStatus previous = profile.getStatus();
+        try {
+            switch (targetStatus) {
+                case ACTIVE:
+                    if (profile.getStatus() == ProfileStatus.PENDING) {
+                        profile.activate();
+                    } else if (profile.getStatus() == ProfileStatus.SUSPENDED) {
+                        profile.reactivate();
+                    } else {
+                        throw new InvalidStatusTransitionException(
+                                "Impossible de passer de " + profile.getStatus() + " à ACTIVE");
+                    }
+                    break;
+                case SUSPENDED:
+                    profile.suspend();
+                    eventPublisher.publishEvent(new ProfileSuspended(profile.getId()));// hada hewa lbo9 li kay gol l
+                                                                                       // offer
+                                                                                       // o campaigin rah had advertiser
+                                                                                       // id
+                                                                                       // t suspenda dire khdemtkem
+                    break;
+                case PENDING:
+                    throw new InvalidStatusTransitionException("Impossible de repasser un profil au statut PENDING");
+                default:
+                    throw new InvalidStatusTransitionException("Transition non supportée");
+            }
+        } catch (InvalidStatusTransitionException e) {
+            log.warn("Status change refused for profile {}: {} -> {}", id, previous, targetStatus);
+            throw e; // خاص يتعاود يترمى، وإلا الـ 409 كتضيع
         }
         profileRepository.save(profile);
+        log.info("Profile {} status changed: {} -> {}", id, previous, targetStatus);
     }
 }
