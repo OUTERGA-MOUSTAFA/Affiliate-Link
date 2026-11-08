@@ -67,10 +67,6 @@ public class Campaign {
             throw new IllegalArgumentException("budget must be greater than 0");
         }
         validatePayout(payoutModel, payoutValue);
-<<<<<<< HEAD
-=======
-
->>>>>>> modulith
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
