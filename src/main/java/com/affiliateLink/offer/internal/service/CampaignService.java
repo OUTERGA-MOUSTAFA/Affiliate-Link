@@ -49,8 +49,8 @@ public class CampaignService {
 
         switch (targeStatus) {
             case ACTIVE -> activate(campaign);
-            case PAUSED -> pause();
-            case ENDED -> end();
+            case PAUSED -> campaign.pause();
+            case ENDED -> campaign.end();
             default -> throw new InvalidStatusTransitionException("A campaign cannot go back to " + targeStatus);
         }
         log.info("Campaign {} is now {}", campingnId, campaign.getStatus());

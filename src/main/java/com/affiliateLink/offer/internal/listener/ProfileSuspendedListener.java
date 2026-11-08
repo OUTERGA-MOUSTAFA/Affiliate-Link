@@ -10,24 +10,26 @@ import org.springframework.stereotype.Component;
 import com.affiliateLink.offer.internal.entity.Campaign;
 import com.affiliateLink.offer.internal.entity.CampaignStatus;
 import com.affiliateLink.offer.internal.repository.CampaignRepository;
-import com.affiliateLink.profile.ProfileSuspended; 
-
-public class ProfileSuspendedListener {
+import com.affiliateLink.profile.ProfileSuspended;
+@Component 
+ class ProfileSuspendedListener {
 
     private static final Logger log = LoggerFactory.getLogger(ProfileSuspendedListener.class);
-
     private final CampaignRepository campaignRepository;
 
     ProfileSuspendedListener(CampaignRepository campaignRepository) {
         this.campaignRepository = campaignRepository;
     }
 
-    @ApplicationModuleListener 
+    @ApplicationModuleListener
     void on(ProfileSuspended event) {
-        List<Campaign> active = campaignRepository
+        List<Campaign> active = campaignRepository /*
+                                                    * hna kan go lih sir dir select offer o compaign dyale had
+                                                    * advertiser li status dyale active
+                                                    */
                 .findByOfferAdvertiserIdAndStatus(event.profileId(), CampaignStatus.ACTIVE);
 
-        active.forEach(Campaign::pause);   // الـ dirty checking كيكتب التعديلات
+        active.forEach(Campaign::pause);// hna katgo lih dez 3la kela compaign o dir liha pause
         log.info("Advertiser {} suspended: {} campaign(s) paused", event.profileId(), active.size());
     }
 }
