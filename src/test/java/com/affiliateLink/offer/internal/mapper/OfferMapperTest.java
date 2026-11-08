@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import com.affiliateLink.common.Niche;   // بدل المسار إلا خليتو فـ بلاصة أخرى
+import com.affiliateLink.common.Niche; // بدل المسار إلا خليتو فـ بلاصة أخرى
 import com.affiliateLink.offer.internal.dto.OfferCreateRequest;
 import com.affiliateLink.offer.internal.dto.OfferResponse;
 import com.affiliateLink.offer.internal.dto.OfferSummaryResponse;
@@ -23,7 +23,7 @@ import com.affiliateLink.offer.internal.entity.PayoutModel;
 import com.affiliateLink.offer.internal.entity.Tag;
 
 // كيشعل غير الـ mappers: بلا Spring Boot كامل وبلا database
-@SpringJUnitConfig({OfferMapperImpl.class, CampaignMapperImpl.class})
+@SpringJUnitConfig({ OfferMapperImpl.class, CampaignMapperImpl.class })
 class OfferMapperTest {
 
     @Autowired
@@ -48,7 +48,7 @@ class OfferMapperTest {
         assertEquals("Pro VPN", offer.getTitle());
         assertEquals(Niche.TECH, offer.getNiche());
         assertNotNull(offer.getCreatedAt());
-        assertTrue(offer.getTags().isEmpty());        // كيتعمرو فـ الـ service
+        assertTrue(offer.getTags().isEmpty()); // كيتعمرو فـ الـ service
         assertTrue(offer.getCampaigns().isEmpty());
     }
 
@@ -58,7 +58,7 @@ class OfferMapperTest {
 
         assertEquals("Pro VPN", response.title());
         assertEquals(Niche.TECH, response.niche());
-        assertEquals(Set.of("vpn"), response.tags());              // trim + lowercase
+        assertEquals(Set.of("vpn"), response.tags()); // trim + lowercase
         assertEquals(1, response.campaigns().size());
         assertEquals("Summer", response.campaigns().get(0).name());
         assertEquals(CampaignStatus.DRAFT, response.campaigns().get(0).status());

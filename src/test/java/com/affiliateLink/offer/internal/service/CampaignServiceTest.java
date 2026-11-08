@@ -103,7 +103,7 @@ class CampaignServiceTest {
         verify(campaignRepository, never()).save(any());
     }
 
-    // ---- updateStatus() : التفعيل الحصري ----
+    // ---- changeStatus() : التفعيل الحصري ----
 
     @Test
     void activatingACampaignPausesThePreviousActiveOne() {
