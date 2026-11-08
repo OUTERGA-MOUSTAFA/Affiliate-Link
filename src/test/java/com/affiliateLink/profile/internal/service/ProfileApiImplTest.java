@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.affiliateLink.common.ResourceNotFoundException;
 import com.affiliateLink.profile.internal.entity.Advertiser;
 import com.affiliateLink.profile.internal.entity.ProfileStatus;
 import com.affiliateLink.profile.internal.repository.AdvertiserRepository;
@@ -20,8 +19,10 @@ import com.affiliateLink.profile.internal.repository.AdvertiserRepository;
 @ExtendWith(MockitoExtension.class)
 class ProfileApiImplTest {
 
-    @Mock AdvertiserRepository advertiserRepository;
-    @InjectMocks ProfileApiImpl profileApi;
+    @Mock
+    AdvertiserRepository advertiserRepository;
+    @InjectMocks
+    ProfileApiImpl profileApi;
 
     @Test
     void isActiveReturnsFalseWhenAdvertiserDoesNotExist() {
@@ -40,9 +41,9 @@ class ProfileApiImplTest {
     }
 
     @Test
-    void getAdvertiserThrowsWhenNotFound() {
+    void getAdvertiserReturnsEmptyWhenNotFound() {
         when(advertiserRepository.findById(99L)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> profileApi.getAdvertiser(99L));
+        assertTrue(profileApi.getAdvertiser(99L).isEmpty());
     }
 }

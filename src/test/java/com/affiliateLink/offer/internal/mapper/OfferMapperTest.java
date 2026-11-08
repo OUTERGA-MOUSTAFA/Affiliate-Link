@@ -30,7 +30,6 @@ class OfferMapperTest {
     private OfferMapper offerMapper;
 
     private Offer sampleOffer() {
-        return Offer.class.descriptorString();
         Offer offer = new Offer(7L, "Pro VPN", "Fast VPN", "https://vpn.example.com", Niche.TECH);
         offer.replaceTags(Set.of(new Tag(" VPN ")));
         offer.addCampaign(new Campaign("Summer", LocalDate.now(), LocalDate.now().plusDays(10),

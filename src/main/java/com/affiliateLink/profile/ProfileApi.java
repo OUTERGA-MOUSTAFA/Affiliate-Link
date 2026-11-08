@@ -1,5 +1,6 @@
 package com.affiliateLink.profile;
 
+import java.util.List;
 import java.util.Optional;
 public interface ProfileApi {
 
@@ -10,4 +11,6 @@ public interface ProfileApi {
     default boolean isActive(Long id) {
         return getAdvertiser(id).map(AdvertiserInfo::active).orElse(false);
     }
+
+    List<String> getActivePublisherEmails(); 
 }
