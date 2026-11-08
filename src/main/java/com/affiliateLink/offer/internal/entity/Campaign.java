@@ -20,7 +20,7 @@ import com.affiliateLink.common.InvalidStatusTransitionException;
 @Table(name = "offer_campaigns")
 public class Campaign {
 
-    private static final BigDecimal ONE_HUNDRED = BigDecimal.valueOf(100);
+    private static final BigDecimal MAX_PERCENTAGE = BigDecimal.valueOf(100);
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,14 +51,14 @@ public class Campaign {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private CampaignStatus status = CampaignStatus.DRAFT;
+    private CampaignStatus status = CampaignStatus.DRAFT;// par default DRAFT mli kadir new Campain() 
 
-    public Campaign() {
+    protected Campaign() {
 
     }
 
-    public Campaign(Offer offer, String name, LocalDate startDate, LocalDate endDate, BigDecimal budget,
-            PayoutModel payoutModel, BigDecimal payoutValue, CampaignStatus status) {
+    public Campaign(String name, LocalDate startDate, LocalDate endDate, BigDecimal budget,
+            PayoutModel payoutModel, BigDecimal payoutValue) {
 
         if (!endDate.isAfter(startDate)) {
             throw new IllegalArgumentException("endDate must be after startDate");
@@ -67,15 +67,12 @@ public class Campaign {
             throw new IllegalArgumentException("budget must be greater than 0");
         }
         validatePayout(payoutModel, payoutValue);
-
-        this.offer = offer;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
         this.budget = budget;
         this.payoutModel = payoutModel;
         this.payoutValue = payoutValue;
-        this.status = status;
     }
 
     // ---- قواعد الـ business (محمولة من الـ entity) ----
@@ -84,7 +81,7 @@ public class Campaign {
         if (value.signum() <= 0) {
             throw new IllegalArgumentException("payoutValue must be greater than 0");
         }
-        if (model == PayoutModel.CPA_PERCENT && value.compareTo(ONE_HUNDRED) > 0) {
+        if (model == PayoutModel.CPA_PERCENT && value.compareTo(MAX_PERCENTAGE) > 0) {
             throw new IllegalArgumentException("A percentage payout cannot exceed 100");
         }
     }
@@ -124,10 +121,6 @@ public class Campaign {
     // package-private: كيناديه غير Offer.addCampaign() (نفس الـ package)
     public void setOffer(Offer offer) {
         this.offer = offer;
-    }
-
-    public static BigDecimal getOneHundred() {
-        return ONE_HUNDRED;
     }
 
     public Long getId() {
