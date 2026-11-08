@@ -19,9 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import com.affiliateLink.common.ConflictException;
-import com.affiliateLink.common.InvalidStatusTransitionException;
 import com.affiliateLink.common.Niche;
-import com.affiliateLink.common.ResourceNotFoundException;
 import com.affiliateLink.offer.internal.dto.CampaignCreateRequest;
 import com.affiliateLink.offer.internal.entity.Campaign;
 import com.affiliateLink.offer.internal.entity.CampaignStatus;
@@ -103,7 +101,7 @@ class CampaignServiceTest {
         verify(campaignRepository, never()).save(any());
     }
 
-    // ---- updateStatus() : التفعيل الحصري ----
+    // ---- changeStatus() : التفعيل الحصري ----
 
     @Test
     void activatingACampaignPausesThePreviousActiveOne() {
