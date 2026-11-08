@@ -8,16 +8,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
-
-import org.hibernate.mapping.Set;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import com.affiliateLink.common.Niche;
 import com.affiliateLink.offer.internal.dto.OfferUpdateRequest;
 import com.affiliateLink.offer.internal.entity.Offer;
-import com.affiliateLink.offer.internal.mapper.CampaignMapper;
-import com.affiliateLink.offer.internal.repository.CampaignRepository;
 import com.affiliateLink.offer.internal.repository.OfferRepository;
 import com.affiliateLink.profile.ProfileApi;
 
