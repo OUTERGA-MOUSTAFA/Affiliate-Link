@@ -53,12 +53,12 @@ public class Campaign {
     @Column(nullable = false, length = 20)
     private CampaignStatus status = CampaignStatus.DRAFT;
 
-    public Campaign() {
+    protected Campaign() {
 
     }
 
-    public Campaign(Offer offer, String name, LocalDate startDate, LocalDate endDate, BigDecimal budget,
-            PayoutModel payoutModel, BigDecimal payoutValue, CampaignStatus status) {
+    public Campaign(String name, LocalDate startDate, LocalDate endDate, BigDecimal budget,
+            PayoutModel payoutModel, BigDecimal payoutValue) {
 
         if (!endDate.isAfter(startDate)) {
             throw new IllegalArgumentException("endDate must be after startDate");
@@ -68,14 +68,12 @@ public class Campaign {
         }
         validatePayout(payoutModel, payoutValue);
 
-        this.offer = offer;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
         this.budget = budget;
         this.payoutModel = payoutModel;
         this.payoutValue = payoutValue;
-        this.status = status;
     }
 
     // ---- قواعد الـ business (محمولة من الـ entity) ----

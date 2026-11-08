@@ -59,11 +59,10 @@ public class Offer {
     @JoinTable(name = "offer_offer_tags", joinColumns = @JoinColumn(name = "offer_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags = new HashSet<>();
 
-    public Offer() {
+    protected Offer() {
     }
 
-    public Offer(Long advertiserId, String title, String description, String landingUrl, Niche niche,
-            Instant createdAt) {
+    public Offer(Long advertiserId, String title, String description, String landingUrl, Niche niche) {
         this.advertiserId = advertiserId;
         this.createdAt = Instant.now();
         update(title, description, landingUrl, niche);
