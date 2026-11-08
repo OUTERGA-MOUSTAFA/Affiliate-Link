@@ -46,14 +46,19 @@ public class CampaignService {
 
         Campaign campaign = campaignRepository.findById(campingnId).orElseThrow(
                 () -> new ResourceNotFoundException("Campaign not found: " + campingnId));
-
-        switch (targeStatus) {
-            case ACTIVE -> activate(campaign);
-            case PAUSED -> campaign.pause();
-            case ENDED -> campaign.end();
-            default -> throw new InvalidStatusTransitionException("A campaign cannot go back to " + targeStatus);
+        CampaignStatus previous = campaign.getStatus();
+        try {
+            switch (targeStatus) {
+                case ACTIVE -> activate(campaign);
+                case PAUSED -> campaign.pause();
+                case ENDED -> campaign.end();
+                default -> throw new InvalidStatusTransitionException("A campaign cannot go back to " + targeStatus);
+            }
+        } catch (InvalidStatusTransitionException e) {
+            log.warn("Campaign {} status change refused: {} -> {}", campingnId, previous, targeStatus);
+            throw e;
         }
-        log.info("Campaign {} is now {}", campingnId, campaign.getStatus());
+        log.info("Campaign {} status changed: {} -> {}", campingnId, previous, campaign.getStatus());
     }
 
     // هذه الدالة تحتوي على شروط (Validations)، فإذا كان التاريخ قد فات أو الانتقال
@@ -102,6 +107,8 @@ public class CampaignService {
                 ? campaignRepository.findAll()
                 : campaignRepository.findByStatus(status);
 
+        log.debug("Campaign list requested: status={}", status);
+        
         return campaigns.stream()
                 .map(campaignMapper::toResponse)
                 .toList();

@@ -8,6 +8,6 @@ import com.affiliateLink.profile.internal.entity.ProfileStatus;
 import com.affiliateLink.profile.internal.entity.Publisher;
 
 public interface PublisherRepository extends JpaRepository <Publisher, Long>{
-        List<Publisher> findActivePublisherByEmails(ProfileStatus status);
+        List<Publisher> findByStatus(ProfileStatus status);
 
 }

@@ -42,6 +42,6 @@ public class ProfileApiImpl implements ProfileApi {
     @Override
     public List<String> getActivePublisherEmails() {
 
-        return publisherRepository.findActivePublisherByEmails(ProfileStatus.ACTIVE).stream().map(Profile::getEmail).toList();
+        return publisherRepository.findByStatus(ProfileStatus.ACTIVE).stream().map(Profile::getEmail).toList();
     }
 }

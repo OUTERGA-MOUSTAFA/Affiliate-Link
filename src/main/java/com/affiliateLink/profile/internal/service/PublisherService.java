@@ -2,7 +2,10 @@ package com.affiliateLink.profile.internal.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.affiliateLink.common.DuplicateEmailException;
 import com.affiliateLink.common.ResourceNotFoundException;
@@ -12,7 +15,10 @@ import com.affiliateLink.profile.internal.repository.ProfileRepository;
 import com.affiliateLink.profile.internal.repository.PublisherRepository;
 
 @Service
+@Transactional(readOnly = true)
 public class PublisherService {
+
+    private static final Logger log = LoggerFactory.getLogger(PublisherService.class);
 
     private final PublisherRepository publisherRepository;
     private final ProfileRepository profileRepository;
@@ -22,17 +28,21 @@ public class PublisherService {
         this.profileRepository = profileRepository;
     }
 
+    @Transactional
     public Publisher create(PublisherCreateRequest request) {
 
-        //check unicité (publishers + advertisers)
+        // check unicité (publishers + advertisers)
         if (profileRepository.existsByEmail(request.email())) {
-           throw new DuplicateEmailException("Un compte existe déjà avec l'email : " + request.email());
+            log.warn("Publisher creation refused: email already used");
+            throw new DuplicateEmailException("Un compte existe déjà avec l'email : " + request.email());
         }
         Publisher publisher = new Publisher(
                 request.email(), request.firstName(), request.lastName(),
                 request.niche(), request.bio(), request.country());
-                //status = PENDING 
-        return publisherRepository.save(publisher);
+                // status = PENDING
+        Publisher saved = publisherRepository.save(publisher);
+        log.info("Publisher created: id={}", saved.getId());
+        return saved;
     }
 
     public List<Publisher> findAll() {

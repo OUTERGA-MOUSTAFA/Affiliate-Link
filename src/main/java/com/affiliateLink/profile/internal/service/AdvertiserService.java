@@ -2,16 +2,23 @@ package com.affiliateLink.profile.internal.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.affiliateLink.common.DuplicateEmailException;
+import com.affiliateLink.common.ResourceNotFoundException;
 import com.affiliateLink.profile.internal.dto.AdvertiserCreateRequest;
 import com.affiliateLink.profile.internal.entity.Advertiser;
 import com.affiliateLink.profile.internal.repository.AdvertiserRepository;
 import com.affiliateLink.profile.internal.repository.ProfileRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class AdvertiserService {
+
+    private static final Logger log = LoggerFactory.getLogger(AdvertiserService.class);
 
     private final AdvertiserRepository advertiserRepository;
     private final ProfileRepository profileRepository;
@@ -21,10 +28,12 @@ public class AdvertiserService {
         this.profileRepository = profileRepository;
     }
 
+    @Transactional
     public Advertiser creaAdvertiser(AdvertiserCreateRequest request) {
 
         if (profileRepository.existsByEmail(request.email())) {
-           throw new DuplicateEmailException("Un compte existe déjà avec l'email : " + request.email());
+            log.warn("Advertiser creation refused: email already used");
+            throw new DuplicateEmailException("Un compte existe déjà avec l'email : " + request.email());
         }
 
         Advertiser advertiser = new Advertiser(
@@ -32,16 +41,17 @@ public class AdvertiserService {
                 request.nomEntreprise(),
                 request.secteur(),
                 request.siteWeb());
-        return advertiserRepository.save(advertiser);
+        Advertiser saved = advertiserRepository.save(advertiser);
+        log.info("Advertiser created: id={}", saved.getId());
+        return saved;
     }
 
-    public List<Advertiser> findAll(){
+    public List<Advertiser> findAll() {
         return advertiserRepository.findAll();
     }
 
-    public Advertiser findById(Long id){
-        
+    public Advertiser findById(Long id) {
         return advertiserRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Advertiser introuvable avec l'id : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Advertiser introuvable avec l'id : " + id));
     }
 }
