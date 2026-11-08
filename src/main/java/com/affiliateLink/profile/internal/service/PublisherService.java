@@ -3,6 +3,7 @@ package com.affiliateLink.profile.internal.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.affiliateLink.common.DuplicateEmailException;
 import com.affiliateLink.common.ResourceNotFoundException;
@@ -12,6 +13,7 @@ import com.affiliateLink.profile.internal.repository.ProfileRepository;
 import com.affiliateLink.profile.internal.repository.PublisherRepository;
 
 @Service
+@Transactional(readOnly = true)
 public class PublisherService {
 
     private final PublisherRepository publisherRepository;
@@ -22,6 +24,7 @@ public class PublisherService {
         this.profileRepository = profileRepository;
     }
 
+    @Transactional
     public Publisher create(PublisherCreateRequest request) {
 
         //check unicité (publishers + advertisers)

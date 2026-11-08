@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.affiliateLink.common.Niche;
+import com.affiliateLink.common.ResourceNotFoundException;
 import com.affiliateLink.offer.internal.dto.OfferCreateRequest;
 import com.affiliateLink.offer.internal.dto.OfferResponse;
 import com.affiliateLink.offer.internal.dto.OfferSummaryResponse;
@@ -54,10 +55,11 @@ public class OfferService {
     public OfferResponse create(OfferCreateRequest request) {
         Long advertiserId = request.advertiserId();
 
-        // 1) واش الـ advertiser كاين؟ -> 404
-        profileApi.getAdvertiser(advertiserId);
+        // wash kayn be3da
+        profileApi.getAdvertiser(advertiserId)
+                .orElseThrow(() -> new ResourceNotFoundException("Advertiser not found: " + advertiserId));
 
-        // 2) واش نشيط؟ -> 409
+        // 2) واش نشيط؟ ->est ce qu'il active
         if (!profileApi.isActive(advertiserId)) {
             log.warn("Offer creation refused: advertiser {} is not active", advertiserId);
             throw new /* exception 409 ديالك */ RuntimeException("Advertiser is not active");

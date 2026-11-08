@@ -5,12 +5,15 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.affiliateLink.common.DuplicateEmailException;
+import com.affiliateLink.common.ResourceNotFoundException;
 import com.affiliateLink.profile.internal.dto.AdvertiserCreateRequest;
 import com.affiliateLink.profile.internal.entity.Advertiser;
 import com.affiliateLink.profile.internal.repository.AdvertiserRepository;
 import com.affiliateLink.profile.internal.repository.ProfileRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 public class AdvertiserService {
 
     private final AdvertiserRepository advertiserRepository;
@@ -21,10 +24,11 @@ public class AdvertiserService {
         this.profileRepository = profileRepository;
     }
 
+    @Transactional
     public Advertiser creaAdvertiser(AdvertiserCreateRequest request) {
 
         if (profileRepository.existsByEmail(request.email())) {
-           throw new DuplicateEmailException("Un compte existe déjà avec l'email : " + request.email());
+            throw new DuplicateEmailException("Un compte existe déjà avec l'email : " + request.email());
         }
 
         Advertiser advertiser = new Advertiser(
@@ -35,13 +39,12 @@ public class AdvertiserService {
         return advertiserRepository.save(advertiser);
     }
 
-    public List<Advertiser> findAll(){
+    public List<Advertiser> findAll() {
         return advertiserRepository.findAll();
     }
 
-    public Advertiser findById(Long id){
-        
+    public Advertiser findById(Long id) {
         return advertiserRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Advertiser introuvable avec l'id : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Advertiser introuvable avec l'id : " + id));
     }
 }
