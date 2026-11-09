@@ -27,7 +27,7 @@ public class PublisherController {
         this.publisherService = publisherService;
     }
 
-     @PostMapping("/publisher")
+     @PostMapping("/publishers")
     @ResponseStatus(HttpStatus.CREATED)
     public PublisherResponse create(@Valid @RequestBody PublisherCreateRequest request) {
         return PublisherResponse.from(publisherService.create(request));
@@ -40,7 +40,7 @@ public class PublisherController {
                 .toList();
     }
 
-    @GetMapping("/publisher/{id}")
+    @GetMapping("/publishers/{id}")
     public PublisherResponse findById(@PathVariable Long id) {
         return PublisherResponse.from(publisherService.findById(id));
     }

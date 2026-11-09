@@ -22,8 +22,7 @@ import com.affiliateLink.offer.internal.service.OfferService;
 
 import jakarta.validation.Valid;
 
-@RestController
-@RequestMapping("/api/offres")
+@RestController("/api/offres")
 public class OfferController {
     private final OfferService offerService;
 
@@ -31,7 +30,7 @@ public class OfferController {
         this.offerService = offerService;
     }
 
-      @PostMapping
+    @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED) // 201
     public OfferResponse create(@Valid @RequestBody OfferCreateRequest request) {
         return offerService.create(request);
@@ -43,7 +42,7 @@ public class OfferController {
         return offerService.update(id, request);
     }
     
-    @GetMapping("/api/offres")
+    @GetMapping 
     public PageResponse<OfferSummaryResponse> search(
             @RequestParam(required = false) Niche niche,
             @RequestParam(required = false) Long advertiserId,

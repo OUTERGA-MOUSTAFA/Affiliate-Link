@@ -26,17 +26,17 @@ public class AdvertiserController {
         this.advertiserService = advertiserService;
     }
 
-    @GetMapping ("/advertisers")
+    @GetMapping("/advertisers")
     public List<AdvertiserResponse> getAllAdvertisers(){
         return advertiserService.findAll().stream().map(AdvertiserResponse::from).toList();
     }
 
-    @GetMapping ("/advertiser/{id}")
+    @GetMapping("/advertisers/{id}")
     public AdvertiserResponse getAdvertiserById(@PathVariable Long id){
         return AdvertiserResponse.from(advertiserService.findById(id));
     }
 
-    @PostMapping ("/advertiser")
+    @PostMapping ("/advertisers")
     @ResponseStatus(HttpStatus.CREATED)
     public AdvertiserResponse creaAdvertiser(@Valid @RequestBody AdvertiserCreateRequest request){
 
