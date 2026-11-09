@@ -4,9 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.modulith.test.ApplicationModuleTest;
 import org.springframework.modulith.test.Scenario;
 
-import com.affiliateLink.offer.internal.entity.CampaignStatus;
-
-@ApplicationModuleTest 
+@ApplicationModuleTest // hada fih PublishedEvents o senario
 class ProfileSuspendedListenerTest {
 
     @Test 
