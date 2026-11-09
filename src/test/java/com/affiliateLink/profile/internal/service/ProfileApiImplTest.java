@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.affiliateLink.profile.internal.entity.Advertiser;
 import com.affiliateLink.profile.internal.entity.ProfileStatus;
 import com.affiliateLink.profile.internal.repository.AdvertiserRepository;
+import com.affiliateLink.profile.internal.service.impliments.ProfileApiImpl;
 
 @ExtendWith(MockitoExtension.class)
 class ProfileApiImplTest {

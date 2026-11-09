@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.affiliateLink.profile.internal.dto.StatusUpdateRequest;
-import com.affiliateLink.profile.internal.service.AdminProfileService;
+import com.affiliateLink.profile.internal.service.impliments.AdminProfileServiceImpl;
 
 import jakarta.validation.Valid;
 
@@ -16,9 +16,9 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/admin")
 public class AdminProfileController {
 
-    private final AdminProfileService adminProfileService;
+    private final AdminProfileServiceImpl adminProfileService;
 
-    public AdminProfileController(AdminProfileService adminProfileService) {
+    public AdminProfileController(AdminProfileServiceImpl adminProfileService) {
         this.adminProfileService = adminProfileService;
     }
 

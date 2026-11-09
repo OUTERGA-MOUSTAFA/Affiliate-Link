@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.affiliateLink.profile.internal.dto.AdvertiserCreateRequest;
 import com.affiliateLink.profile.internal.dto.AdvertiserResponse;
-import com.affiliateLink.profile.internal.service.AdvertiserService;
+import com.affiliateLink.profile.internal.service.impliments.AdvertiserServiceImpl;
 
 import jakarta.validation.Valid;
 
@@ -21,8 +21,8 @@ import jakarta.validation.Valid;
 @RestController  
 @RequestMapping ("/api")
 public class AdvertiserController {
-    private final AdvertiserService advertiserService;
-    public AdvertiserController(AdvertiserService advertiserService){
+    private final AdvertiserServiceImpl advertiserService;
+    public AdvertiserController(AdvertiserServiceImpl advertiserService){
         this.advertiserService = advertiserService;
     }
 

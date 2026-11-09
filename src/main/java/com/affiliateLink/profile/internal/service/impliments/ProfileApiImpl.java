@@ -1,4 +1,4 @@
-package com.affiliateLink.profile.internal.service;
+package com.affiliateLink.profile.internal.service.impliments;
 
 import java.util.List;
 import java.util.Optional;

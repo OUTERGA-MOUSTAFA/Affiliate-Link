@@ -30,20 +30,25 @@ import com.affiliateLink.offer.internal.entity.PayoutModel;
 import com.affiliateLink.offer.internal.mapper.CampaignMapper;
 import com.affiliateLink.offer.internal.repository.CampaignRepository;
 import com.affiliateLink.offer.internal.repository.OfferRepository;
+import com.affiliateLink.offer.internal.service.impliments.CampaignServiceImpl;
 import com.affiliateLink.profile.ProfileApi;
 
 @ExtendWith(MockitoExtension.class)
 class CampaignServiceTest {
 
     // ---- الـ "ممثلين": نسخ مزيفة بلا database ----
-    @Mock CampaignRepository campaignRepository;
-    @Mock OfferRepository offerRepository;
-    @Mock CampaignMapper campaignMapper;
-    @Mock ProfileApi profileApi;
+    @Mock
+    CampaignRepository campaignRepository;
+    @Mock
+    OfferRepository offerRepository;
+    @Mock
+    CampaignMapper campaignMapper;
+    @Mock
+    ProfileApi profileApi;
 
     // ---- الـ service الحقيقي، كيتحقن فيه الممثلين ----
-    @InjectMocks CampaignService campaignService;
-
+    @InjectMocks
+    CampaignServiceImpl campaignService;
     private final LocalDate today = LocalDate.now();
 
     private final CampaignCreateRequest request = new CampaignCreateRequest(
@@ -60,7 +65,7 @@ class CampaignServiceTest {
         Campaign c = new Campaign("C" + id, today, today.plusDays(10),
                 BigDecimal.valueOf(100), PayoutModel.CPC, BigDecimal.valueOf(2));
         offer.addCampaign(c);
-        ReflectionTestUtils.setField(c, "id", id);   // فـ الـ test ما كاينش database تعطي id
+        ReflectionTestUtils.setField(c, "id", id); // فـ الـ test ما كاينش database تعطي id
         return c;
     }
 
@@ -111,8 +116,8 @@ class CampaignServiceTest {
         ReflectionTestUtils.setField(offer, "id", 1L);
 
         Campaign old = campaignOf(offer, 1L);
-        old.activate();                                   // القديمة ACTIVE
-        Campaign next = campaignOf(offer, 2L);            // الجديدة DRAFT
+        old.activate(); // القديمة ACTIVE
+        Campaign next = campaignOf(offer, 2L); // الجديدة DRAFT
 
         when(campaignRepository.findById(2L)).thenReturn(Optional.of(next));
         when(campaignRepository.findByOfferIdAndStatus(1L, CampaignStatus.ACTIVE)).thenReturn(Optional.of(old));
@@ -121,7 +126,7 @@ class CampaignServiceTest {
 
         assertEquals(CampaignStatus.PAUSED, old.getStatus());
         assertEquals(CampaignStatus.ACTIVE, next.getStatus());
-        verify(campaignRepository).saveAndFlush(old);     // كتكتب قبل
+        verify(campaignRepository).saveAndFlush(old); // كتكتب قبل
     }
 
     @Test
