@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.affiliateLink.profile.internal.dto.PublisherCreateRequest;
 import com.affiliateLink.profile.internal.dto.PublisherResponse;
-import com.affiliateLink.profile.internal.service.PublisherService;
+import com.affiliateLink.profile.internal.service.impliments.PublisherServiceImpl;
 
 import jakarta.validation.Valid;
 
@@ -21,9 +21,9 @@ import jakarta.validation.Valid;
 @RequestMapping("/api")
 public class PublisherController {
 
-    private final PublisherService publisherService;
+    private final PublisherServiceImpl publisherService;
 
-    public PublisherController(PublisherService publisherService) {
+    public PublisherController(PublisherServiceImpl publisherService) {
         this.publisherService = publisherService;
     }
 

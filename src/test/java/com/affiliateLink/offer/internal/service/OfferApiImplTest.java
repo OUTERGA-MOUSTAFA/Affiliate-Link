@@ -19,6 +19,7 @@ import com.affiliateLink.offer.internal.entity.Campaign;
 import com.affiliateLink.offer.internal.entity.Offer;
 import com.affiliateLink.offer.internal.entity.PayoutModel;
 import com.affiliateLink.offer.internal.repository.CampaignRepository;
+import com.affiliateLink.offer.internal.service.impliments.OfferApiImpl;
 
 @ExtendWith(MockitoExtension.class)
 class OfferApiImplTest {

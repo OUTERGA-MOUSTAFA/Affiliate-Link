@@ -1,4 +1,4 @@
-package com.affiliateLink.offer.internal.service;
+package com.affiliateLink.offer.internal.service.impliments;
 
 import java.util.Optional;
 import org.springframework.stereotype.Service;

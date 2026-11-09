@@ -16,16 +16,16 @@ import com.affiliateLink.offer.internal.dto.CampaignCreateRequest;
 import com.affiliateLink.offer.internal.dto.CampaignResponse;
 import com.affiliateLink.offer.internal.dto.CampaignStatusUpdateRequest;
 import com.affiliateLink.offer.internal.entity.CampaignStatus;
-import com.affiliateLink.offer.internal.service.CampaignService;
+import com.affiliateLink.offer.internal.service.impliments.CampaignServiceImpl;
 
 import jakarta.validation.Valid;
 
 @RestController("/api")
 public class CampaignController {
 
-    private final CampaignService campaignService;
+    private final CampaignServiceImpl campaignService;
 
-    public CampaignController(CampaignService campaignService) {
+    public CampaignController(CampaignServiceImpl campaignService) {
         this.campaignService = campaignService;
     }
 

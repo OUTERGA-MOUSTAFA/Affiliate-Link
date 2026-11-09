@@ -16,11 +16,12 @@ import com.affiliateLink.common.Niche;
 import com.affiliateLink.offer.internal.dto.OfferUpdateRequest;
 import com.affiliateLink.offer.internal.entity.Offer;
 import com.affiliateLink.offer.internal.repository.OfferRepository;
+import com.affiliateLink.offer.internal.service.impliments.OfferServiceImpl;
 import com.affiliateLink.profile.ProfileApi;
 
 public class OfferServiceTest {
 
-    @Mock OfferService offerService;
+    @Mock OfferServiceImpl offerService;
     @Mock OfferRepository offerRepository;
     @Mock ProfileApi profileApi;
   
