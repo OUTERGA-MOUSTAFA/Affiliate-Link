@@ -4,13 +4,13 @@ import org.springframework.modulith.events.ApplicationModuleListener;
 
 import com.affiliateLink.profile.ProfileSuspended;
 
-public class listener {
+public class Listener {
     
     
     // test event 
     @ApplicationModuleListener // kaykhdem after commit dyale @Transactional
     public void on(ProfileSuspended event) {
-        System.out.println(">>> ProfileSuspended reçu pour profileId=" + event.profileId());
+        // System.out.println(">>> ProfileSuspended reçu pour profileId=" + event.profileId());
     }
     
 }

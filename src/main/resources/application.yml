@@ -9,7 +9,7 @@ spring:
   docker:
     compose:
       enabled: true
-      lifecycle-management: start-and-stop
+      lifecycle-management: start-only
   datasource:
     url: jdbc:postgresql://127.0.0.1:5433/affiliatelink
     username: postgres
