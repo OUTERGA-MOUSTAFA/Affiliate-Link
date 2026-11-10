@@ -18,15 +18,16 @@ import com.affiliateLink.offer.internal.dto.OfferResponse;
 import com.affiliateLink.offer.internal.dto.OfferSummaryResponse;
 import com.affiliateLink.offer.internal.dto.OfferUpdateRequest;
 import com.affiliateLink.offer.internal.dto.PageResponse;
-import com.affiliateLink.offer.internal.service.impliments.OfferServiceImpl;
+import com.affiliateLink.offer.internal.service.OfferService;
 
 import jakarta.validation.Valid;
 
-@RestController("/api/offres")
+@RestController
+@RequestMapping("/api/offres")
 public class OfferController {
-    private final OfferServiceImpl offerService;
+    private final OfferService offerService;
 
-    public OfferController(OfferServiceImpl offerService) {
+    public OfferController(OfferService offerService) {
         this.offerService = offerService;
     }
 

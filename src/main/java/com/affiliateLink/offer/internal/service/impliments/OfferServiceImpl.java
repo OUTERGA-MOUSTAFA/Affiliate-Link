@@ -61,7 +61,7 @@ public class OfferServiceImpl implements OfferService{
         profileApi.getAdvertiser(advertiserId)
                 .orElseThrow(() -> new ResourceNotFoundException("Advertiser not found: " + advertiserId));
 
-        // 2) واش نشيط؟ ->est ce qu'il active
+        // 2) est ce qu'il active
         if (!profileApi.isActive(advertiserId)) {
             log.warn("Offer creation refused: advertiser {} is not active", advertiserId);
             throw new /* exception 409 ديالك */ RuntimeException("Advertiser is not active");
