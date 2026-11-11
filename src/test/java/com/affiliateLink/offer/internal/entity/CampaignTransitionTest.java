@@ -1,79 +1,123 @@
 package com.affiliateLink.offer.internal.entity;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import com.affiliateLink.common.InvalidStatusTransitionException;
 
-
 class CampaignTransitionTest {
 
-  
-    // helper: حملة صالحة وكتتخلق DRAFT
-    private Campaign newCampaign() {
-        return new Campaign("Summer", LocalDate.now(), LocalDate.now().plusDays(10),
+    // ---------- helpers ----------
+
+    // كيوصل الحملة للحالة المطلوبة غير بالدوال العمومية
+    private Campaign campaignIn(CampaignStatus status) {
+        Campaign campaign = new Campaign("Summer", LocalDate.now(), LocalDate.now().plusDays(10),
                 BigDecimal.valueOf(1000), PayoutModel.CPC, BigDecimal.valueOf(2));
+        switch (status) {
+            case DRAFT -> { }
+            case ACTIVE -> campaign.activate();
+            case PAUSED -> {
+                campaign.activate();
+                campaign.pause();
+            }
+            case ENDED -> {
+                campaign.activate();
+                campaign.end();
+            }
+        }
+        return campaign;
+    }
+
+    private void moveTo(Campaign campaign, CampaignStatus target) {
+        switch (target) {
+            case ACTIVE -> campaign.activate();
+            case PAUSED -> campaign.pause();
+            case ENDED -> campaign.end();
+            default -> throw new IllegalArgumentException("No method leads to " + target);
+        }
+    }
+
+    // ---------- tests ----------
+
+    @Test
+    void newCampaignStartsAsDraft() {
+        // When
+        Campaign campaign = campaignIn(CampaignStatus.DRAFT);
+
+        // Then
+        assertThat(campaign.getStatus()).isEqualTo(CampaignStatus.DRAFT);
+    }
+
+    @ParameterizedTest(name = "{0} -> {1} is allowed")
+    @CsvSource({
+            "DRAFT,ACTIVE",
+            "ACTIVE,PAUSED",
+            "ACTIVE,ENDED",
+            "PAUSED,ACTIVE",
+            "PAUSED,ENDED"
+    })
+    void allowedTransitionChangesTheStatus(CampaignStatus from, CampaignStatus to) {
+        // Given
+        Campaign campaign = campaignIn(from);
+
+        // When
+        moveTo(campaign, to);
+
+        // Then
+        assertThat(campaign.getStatus()).isEqualTo(to);
+    }
+
+    @ParameterizedTest(name = "{0} -> {1} is refused")
+    @CsvSource({
+            "DRAFT,PAUSED",
+            "DRAFT,ENDED",
+            "ACTIVE,ACTIVE",
+            "PAUSED,PAUSED",
+            "ENDED,ACTIVE",
+            "ENDED,PAUSED",
+            "ENDED,ENDED"
+    })
+    void forbiddenTransitionIsRefusedAndKeepsTheStatus(CampaignStatus from, CampaignStatus to) {
+        // Given
+        Campaign campaign = campaignIn(from);
+
+        // When / Then
+        assertThatThrownBy(() -> moveTo(campaign, to))
+                .isInstanceOf(InvalidStatusTransitionException.class);
+        assertThat(campaign.getStatus()).isEqualTo(from);
     }
 
     @Test
-    void newCampaignIsDraft() {
-        assertEquals(CampaignStatus.DRAFT, newCampaign().getStatus());
+    void refusedTransitionMessageNamesBothStatuses() {
+        // Given
+        Campaign campaign = campaignIn(CampaignStatus.DRAFT);
+
+        // When / Then
+        assertThatThrownBy(campaign::pause)
+                .isInstanceOf(InvalidStatusTransitionException.class)
+                .hasMessageContaining("DRAFT")
+                .hasMessageContaining("PAUSED");
     }
 
     @Test
-    void draftCanBeActivated() {
-        Campaign c = newCampaign();
-        c.activate();
-        assertEquals(CampaignStatus.ACTIVE, c.getStatus());
-    }
+    void campaignCanGoThroughItsWholeLifecycle() {
+        // Given
+        Campaign campaign = campaignIn(CampaignStatus.DRAFT);
 
-    @Test
-    void activeCanBePausedThenReactivated() {
-        Campaign c = newCampaign();
-        c.activate();
-        c.pause();
-        assertEquals(CampaignStatus.PAUSED, c.getStatus());
-        c.activate();
-        assertEquals(CampaignStatus.ACTIVE, c.getStatus());
-    }
+        // When
+        campaign.activate();
+        campaign.pause();
+        campaign.activate();
+        campaign.end();
 
-    @Test
-    void activeCanBeEnded() {
-        Campaign c = newCampaign();
-        c.activate();
-        c.end();
-        assertEquals(CampaignStatus.ENDED, c.getStatus());
-    }
-
-    @Test
-    void draftCannotBePaused() {
-        assertThrows(InvalidStatusTransitionException.class, () -> newCampaign().pause());
-    }
-
-    @Test
-    void draftCannotBeEnded() {
-        assertThrows(InvalidStatusTransitionException.class, () -> newCampaign().end());
-    }
-
-    @Test
-    void endedCampaignCannotChangeAnymore() {
-        Campaign c = newCampaign();
-        c.activate();
-        c.end();
-        assertThrows(InvalidStatusTransitionException.class, c::activate);
-        assertThrows(InvalidStatusTransitionException.class, c::pause);
-        assertThrows(InvalidStatusTransitionException.class, c::end);
-    }
-
-    @Test
-    void campaignWithPastEndDateCannotBeActivated() {
-        Campaign expired = new Campaign("Old", LocalDate.now().minusDays(10), LocalDate.now().minusDays(1),
-                BigDecimal.valueOf(1000), PayoutModel.CPC, BigDecimal.valueOf(2));
-        assertThrows(InvalidStatusTransitionException.class, expired::activate);
+        // Then
+        assertThat(campaign.getStatus()).isEqualTo(CampaignStatus.ENDED);
     }
 }
