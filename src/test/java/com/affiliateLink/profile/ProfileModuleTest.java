@@ -42,7 +42,7 @@ class ProfileModuleTest {
 
         // Then
         assertThat(events.ofType(ProfileSuspended.class)).hasSize(1);
-        assertThat(events.ofType(ProfileSuspended.class).matching(ProfileSuspended::profileId, id)).hasSize(1);
+        assertThat(events.ofType(ProfileSuspended.class).matching(ProfileSuspended::profileId, id::equals)).hasSize(1);
     }
 
     @Test
@@ -54,7 +54,7 @@ class ProfileModuleTest {
         adminProfileService.updateStatus(id, ProfileStatus.SUSPENDED);
 
         // Then : c'est aux listeners de décider quoi faire d'un publisher
-        assertThat(events.ofType(ProfileSuspended.class).matching(ProfileSuspended::profileId, id)).hasSize(1);
+        assertThat(events.ofType(ProfileSuspended.class).matching(ProfileSuspended::profileId, id::equals)).hasSize(1);
     }
 
     // ---------- aucune publication ----------
