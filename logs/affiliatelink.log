@@ -485,3 +485,11 @@
 2026-11-11T14:54:40.824Z  INFO 22180 --- [affiliatelink] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2026-11-11T14:54:40.826Z  INFO 22180 --- [affiliatelink] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2026-11-11T14:54:40.836Z  INFO 22180 --- [affiliatelink] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-11-11T22:03:31.776Z  INFO 40688 --- [affiliatelink] [main] c.a.o.i.c.CampaignControllerTest         : Starting CampaignControllerTest using Java 17.0.12 with PID 40688 (started by LENOVO in C:\Users\LENOVO\Desktop\2 année\Briefs\Affiliate Link)
+2026-11-11T22:03:31.780Z DEBUG 40688 --- [affiliatelink] [main] c.a.o.i.c.CampaignControllerTest         : Running with Spring Boot v4.1.1, Spring v7.0.9
+2026-11-11T22:03:31.781Z  INFO 40688 --- [affiliatelink] [main] c.a.o.i.c.CampaignControllerTest         : No active profile set, falling back to 1 default profile: "default"
+2026-11-11T22:03:34.505Z  INFO 40688 --- [affiliatelink] [main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-11-11T22:03:34.505Z  INFO 40688 --- [affiliatelink] [main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-11-11T22:03:34.508Z  INFO 40688 --- [affiliatelink] [main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 3 ms
+2026-11-11T22:03:34.546Z  INFO 40688 --- [affiliatelink] [main] c.a.o.i.c.CampaignControllerTest         : Started CampaignControllerTest in 3.419 seconds (process running for 5.416)
+2026-11-11T22:03:34.923Z  WARN 40688 --- [affiliatelink] [main] c.a.common.GlobalExceptionHandler        : Conflict: Cannot go from DRAFT to PAUSED
