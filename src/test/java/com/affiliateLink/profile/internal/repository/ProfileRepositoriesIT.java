@@ -26,13 +26,17 @@ import jakarta.persistence.EntityManager;
 @Import(PostgresTestConfiguration.class)
 class ProfileRepositoriesIT {
 
-    @Autowired ProfileRepository profileRepository;
-    @Autowired PublisherRepository publisherRepository;
-    @Autowired AdvertiserRepository advertiserRepository;
-    @Autowired EntityManager em;
+    @Autowired
+    ProfileRepository profileRepository;
+    @Autowired
+    PublisherRepository publisherRepository;
+    @Autowired
+    AdvertiserRepository advertiserRepository;
+    @Autowired
+    EntityManager em;
 
     private Publisher publisher(String email) {
-        return new Publisher(email, "Sara", "Alami", Niche.TECH, "bio", "MA");
+        return new Publisher(email, "Sata", "Alami", Niche.TECH, "bio", "MA");
     }
 
     private Advertiser advertiser(String email) {
@@ -42,11 +46,11 @@ class ProfileRepositoriesIT {
     @Test
     void existsByEmailIsTrueForAPublisherAndForAnAdvertiser() {
         // Given
-        publisherRepository.save(publisher("sara@example.com"));
+        publisherRepository.save(publisher("sata@example.com"));
         advertiserRepository.save(advertiser("contact@acme.com"));
 
         // Then : la table commune couvre les deux types de profil
-        assertThat(profileRepository.existsByEmail("sara@example.com")).isTrue();
+        assertThat(profileRepository.existsByEmail("sata@example.com")).isTrue();
         assertThat(profileRepository.existsByEmail("contact@acme.com")).isTrue();
     }
 
@@ -68,7 +72,7 @@ class ProfileRepositoriesIT {
     @Test
     void aNewProfileIsStoredAsPending() {
         // Given
-        Long id = publisherRepository.saveAndFlush(publisher("sara@example.com")).getId();
+        Long id = publisherRepository.saveAndFlush(publisher("sata@example.com")).getId();
         em.clear();
 
         // When
@@ -81,7 +85,7 @@ class ProfileRepositoriesIT {
     @Test
     void findingByTheParentRepositoryReturnsTheRightSubclass() {
         // Given : héritage JOINED
-        Long publisherId = publisherRepository.saveAndFlush(publisher("sara@example.com")).getId();
+        Long publisherId = publisherRepository.saveAndFlush(publisher("sata@example.com")).getId();
         Long advertiserId = advertiserRepository.saveAndFlush(advertiser("contact@acme.com")).getId();
         em.clear();
 
@@ -105,5 +109,16 @@ class ProfileRepositoriesIT {
 
         // Then
         assertThat(found).extracting(Profile::getEmail).containsExactly("active@example.com");
+    }
+
+    @Test
+    void twoPublishersMayShareTheSameFirstName() {
+        // Given
+        publisherRepository.saveAndFlush(publisher("first@example.com"));
+
+        // When / Then : même prénom "Sata", autre email
+        org.assertj.core.api.Assertions.assertThatCode(
+                () -> publisherRepository.saveAndFlush(publisher("second@example.com")))
+                .doesNotThrowAnyException();
     }
 }
