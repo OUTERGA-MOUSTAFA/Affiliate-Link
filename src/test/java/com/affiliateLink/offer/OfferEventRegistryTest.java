@@ -42,7 +42,7 @@ class OfferEventRegistryTest extends OfferModuleSupportTest {
 
         // When / Then : deux listeners écoutent ProfileSuspended
         scenario.publish(new ProfileSuspended(7L))
-                .waitAtMost(WAIT)
+                .andWaitAtMost(WAIT)
                 .andWaitForStateChange(() -> publications(true), done -> done == 2)
                 .andVerify(done -> {
                     assertThat(publications(false)).isZero();
@@ -63,7 +63,7 @@ class OfferEventRegistryTest extends OfferModuleSupportTest {
 
         // When / Then : le listener des campagnes termine, celui des notifications reste en attente
         scenario.publish(new ProfileSuspended(7L))
-                .waitAtMost(WAIT)
+                .andWaitAtMost(WAIT)
                 .andWaitForStateChange(() -> publications(true), done -> done == 1)
                 .andVerify(done -> {
                     verify(notificationSender, timeout(5_000)).send(any(), any(), any());   // il a bien été appelé et a échoué

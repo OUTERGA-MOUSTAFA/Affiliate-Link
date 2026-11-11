@@ -42,6 +42,7 @@ class ProfileModuleTest {
 
         // Then
         assertThat(events.ofType(ProfileSuspended.class)).hasSize(1);
+        //      id ديالها كيساوي  profileId اللي events جيب الـ
         assertThat(events.ofType(ProfileSuspended.class).matching(ProfileSuspended::profileId, id::equals)).hasSize(1);
     }
 

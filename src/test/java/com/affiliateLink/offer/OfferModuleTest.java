@@ -35,7 +35,7 @@ class OfferModuleTest extends OfferModuleSupportTest {
 
         // When / Then : on attend que plus aucune campagne ne soit ACTIVE
         scenario.publish(new ProfileSuspended(7L))
-                .waitAtMost(WAIT)
+                .andWaitAtMost(WAIT)
                 .andWaitForStateChange(() -> campaigns(7L, CampaignStatus.ACTIVE), active -> active == 0)
                 .andVerify(active -> assertThat(campaigns(7L, CampaignStatus.PAUSED)).isEqualTo(2));
     }
@@ -48,7 +48,7 @@ class OfferModuleTest extends OfferModuleSupportTest {
 
         // When / Then : on attend que les deux listeners aient terminé
         scenario.publish(new ProfileSuspended(7L))
-                .waitAtMost(WAIT)
+                .andWaitAtMost(WAIT)
                 .andWaitForStateChange(() -> publications(true), done -> done == 2)
                 .andVerify(done -> {
                     assertThat(campaigns(7L, CampaignStatus.PAUSED)).isEqualTo(1);
@@ -65,7 +65,7 @@ class OfferModuleTest extends OfferModuleSupportTest {
 
         // When / Then
         scenario.publish(new ProfileSuspended(7L))
-                .waitAtMost(WAIT)
+                .andWaitAtMost(WAIT)
                 .andWaitForStateChange(() -> publications(true), done -> done == 2)
                 .andVerify(done -> {
                     assertThat(campaigns(7L, CampaignStatus.DRAFT)).isEqualTo(1);
@@ -83,7 +83,7 @@ class OfferModuleTest extends OfferModuleSupportTest {
 
         // When / Then
         scenario.publish(new ProfileSuspended(7L))
-                .waitAtMost(WAIT)
+                .andWaitAtMost(WAIT)
                 .andWaitForStateChange(() -> publications(true), done -> done == 2)
                 .andVerify(done -> verify(notificationSender).send(eq(emails), anyString(), anyString()));
     }
@@ -94,7 +94,7 @@ class OfferModuleTest extends OfferModuleSupportTest {
 
         // When / Then
         scenario.publish(new ProfileSuspended(9L))
-                .waitAtMost(WAIT)
+                .andWaitAtMost(WAIT)
                 .andWaitForStateChange(() -> publications(true), done -> done == 2)
                 .andVerify(done -> verifyNoInteractions(notificationSender));
     }
