@@ -31,7 +31,7 @@ import com.affiliateLink.offer.internal.repository.OfferSpecifications;
 import com.affiliateLink.offer.internal.repository.TagRepository;
 import com.affiliateLink.offer.internal.service.OfferService;
 import com.affiliateLink.profile.ProfileApi; // الجذر ديال profile: مسموح
-
+import com.affiliateLink.common.ConflictException;
 @Service
 @Transactional(readOnly = true)
 public class OfferServiceImpl implements OfferService{
@@ -64,7 +64,7 @@ public class OfferServiceImpl implements OfferService{
         // 2) est ce qu'il active
         if (!profileApi.isActive(advertiserId)) {
             log.warn("Offer creation refused: advertiser {} is not active", advertiserId);
-            throw new /* exception 409 ديالك */ RuntimeException("Advertiser is not active");
+            throw new /* exception 409 ديالك */ ConflictException("Advertiser is not active");
         }
 
         // 3) التحويل + الـ tags (كيحتاجو database، ماشي MapStruct)
@@ -105,13 +105,13 @@ public class OfferServiceImpl implements OfferService{
     public OfferResponse update(Long offerId, OfferUpdateRequest request) {
         // 
         Offer offer = offerRepository.findById(offerId)
-                .orElseThrow(() -> new /* exception 404 */ RuntimeException("Offer not found: " + offerId));
+                .orElseThrow(() -> new /* exception 404 */ ResourceNotFoundException("Offer not found: " + offerId));
 
         // advertise of this offer pas de request
         Long advertiserId = offer.getAdvertiserId();
         if (!profileApi.isActive(advertiserId)) {
             log.warn("Offer update refused: advertiser {} is not active (offerId={})", advertiserId, offerId);
-            throw new /* exception 409 */ RuntimeException("Advertiser is not active");
+            throw new /* exception 409 */ ConflictException("Advertiser is not active");
         }
 
         // modification f entity
@@ -128,7 +128,7 @@ public class OfferServiceImpl implements OfferService{
     @Override
     public OfferResponse getById(Long id) {
         Offer offer = offerRepository.findById(id)
-                .orElseThrow(() -> new /* exception 404 */ RuntimeException("Offer not found: " + id));
+                .orElseThrow(() -> new /* exception 404 */ ResourceNotFoundException("Offer not found: " + id));
 
         return offerMapper.toResponse(offer); // OfferResponse فيه الحملات (campaigns)
     }

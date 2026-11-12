@@ -53,7 +53,7 @@ import com.affiliateLink.offer.internal.service.OfferService;
 
 @WebMvcTest(OfferController.class)
 @EnableSpringDataWebSupport   // garantit la résolution de Pageable (page, size, sort)
-class OfferControllerTest {
+class OfferControllerIT {
 
     private static final String VALID_CREATE = """
             {"advertiserId":1,"title":"Pro VPN","description":"Fast VPN","landingUrl":"https://vpn.example.com",

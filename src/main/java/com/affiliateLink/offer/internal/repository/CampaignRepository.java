@@ -21,9 +21,12 @@ public interface CampaignRepository extends JpaRepository<Campaign, Long> {
     // Écrire une requête qui renvoie les campagnes d’un advertiser dans un statut
     // donné, triées par date de début.
 
-    @Query (""" 
-        Select c. Compaign  c where c.offer.advertiserId=:advertiserId and c.status=: status Order By c.startDate
-    """)
-
-    List<Campaign> findByAdvertiserIdAndStatusOrderByStartDate(@Param("advertiserId")  Long advertiserId,@Param ("status") CampaignStatus status);
+//    @Query("""
+//         SELECT c FROM Campaign c
+//         WHERE c.offer.advertiserId = :advertiserId
+//           AND c.status = :status
+//         ORDER BY c.startDate
+//         """)
+// List<Campaign> findByAdvertiserIdAndStatusOrderByStartDate(@Param("advertiserId") Long advertiserId,
+//                                                           @Param("status") CampaignStatus status);
 }

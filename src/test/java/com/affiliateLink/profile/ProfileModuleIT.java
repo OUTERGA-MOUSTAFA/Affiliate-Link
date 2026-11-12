@@ -24,7 +24,7 @@ import com.affiliateLink.profile.internal.service.AdminProfileService;
 @ApplicationModuleTest
 @Import(PostgresTestConfiguration.class)
 @Transactional   // rollback automatique : chaque test repart d'une base propre
-class ProfileModuleTest {
+class ProfileModuleIT {
 
     @Autowired AdminProfileService adminProfileService;
     @Autowired AdvertiserRepository advertiserRepository;

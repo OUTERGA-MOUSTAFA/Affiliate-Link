@@ -29,7 +29,7 @@ import com.affiliateLink.profile.internal.entity.Publisher;
 import com.affiliateLink.profile.internal.service.PublisherService;
 
 @WebMvcTest(PublisherController.class)
-class PublisherControllerTest {
+class PublisherControllerIT {
 
     private static final String VALID_BODY = """
             {"email":"sara@example.com","firstName":"Sara","lastName":"Alami",

@@ -24,14 +24,16 @@ import com.affiliateLink.offer.internal.entity.Tag;
 
 // كيشعل غير الـ mappers: بلا Spring Boot كامل وبلا database
 @SpringJUnitConfig({ OfferMapperImpl.class, CampaignMapperImpl.class })
-class OfferMapperTest {
+class OfferMapperIT {
 
     @Autowired
     private OfferMapper offerMapper;
 
     private Offer sampleOffer() {
         Offer offer = new Offer(7L, "Pro VPN", "Fast VPN", "https://vpn.example.com", Niche.TECH);
-        offer.replaceTags(Set.of(new Tag(" VPN ")));
+        // offer.replaceTags(Set.of(new Tag(" VPN ")));
+        offer.replaceTags(Set.of(new Tag("vpn")));// الـ mapper ما كيحولش الحروف، كينقل غير السمية كيف ما هي. اللي كيدير
+                                                  // trim و toLowerCase هو OfferServiceImpl.resolveTags()
         offer.addCampaign(new Campaign("Summer", LocalDate.now(), LocalDate.now().plusDays(10),
                 BigDecimal.valueOf(500), PayoutModel.CPC, BigDecimal.valueOf(2)));
         return offer;

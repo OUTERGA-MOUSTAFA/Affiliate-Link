@@ -10,21 +10,30 @@ import static org.mockito.Mockito.when;
 import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.affiliateLink.common.Niche;
 import com.affiliateLink.offer.internal.dto.OfferUpdateRequest;
 import com.affiliateLink.offer.internal.entity.Offer;
+import com.affiliateLink.offer.internal.mapper.OfferMapper;
 import com.affiliateLink.offer.internal.repository.OfferRepository;
+import com.affiliateLink.offer.internal.repository.TagRepository;
 import com.affiliateLink.offer.internal.service.impliments.OfferServiceImpl;
 import com.affiliateLink.profile.ProfileApi;
 
+      
+    @ExtendWith(MockitoExtension.class)
 public class OfferServiceTest {
 
-    @Mock OfferServiceImpl offerService;
+    @InjectMocks OfferServiceImpl offerService;// ← البطل: @InjectMocks ماشي @Mock
     @Mock OfferRepository offerRepository;
+    @Mock TagRepository tagRepository;              // ← كانو ناقصين: الـ constructor
+    @Mock OfferMapper offerMapper; //   ديال OfferServiceImpl محتاجهم
     @Mock ProfileApi profileApi;
-  
+
     @Test
     void updateModifiesExistingOfferWithoutCreatingANewOne() {
     Offer offer = new Offer(7L, "Old", "d", "https://old.example.com",

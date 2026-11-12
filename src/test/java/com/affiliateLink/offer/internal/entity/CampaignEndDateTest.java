@@ -18,8 +18,13 @@ class CampaignEndDateTest {
     private final LocalDate today = LocalDate.now();
 
     // startDate ديما قبل endDate، باش الـ constructor يقبلها حتى ملي endDate فات
+    // private Campaign campaignEndingOn(LocalDate endDate) {
+    // return new Campaign("Promo", today.minusDays(10), endDate,
+    // BigDecimal.valueOf(500), PayoutModel.CPC, BigDecimal.valueOf(2));
+    // }
+
     private Campaign campaignEndingOn(LocalDate endDate) {
-        return new Campaign("Promo", today.minusDays(10), endDate,
+        return new Campaign("Promo", endDate.minusDays(10), endDate,
                 BigDecimal.valueOf(500), PayoutModel.CPC, BigDecimal.valueOf(2));
     }
 

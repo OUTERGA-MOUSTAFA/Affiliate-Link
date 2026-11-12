@@ -28,7 +28,7 @@ import com.affiliateLink.profile.internal.entity.Advertiser;
 import com.affiliateLink.profile.internal.service.AdvertiserService;
 
 @WebMvcTest(AdvertiserController.class)
-class AdvertiserControllerTest {
+class AdvertiserControllerIT {
 
     private static final String VALID_BODY = """
             {"email":"contact@acme.com","nomEntreprise":"Acme","secteur":"Tech",

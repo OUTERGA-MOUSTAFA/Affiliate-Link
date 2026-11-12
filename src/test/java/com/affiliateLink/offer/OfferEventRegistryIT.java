@@ -28,7 +28,7 @@ import com.affiliateLink.profile.ProfileSuspended;
 
 @ApplicationModuleTest
 @Import(PostgresTestConfiguration.class)
-class OfferEventRegistryTest extends OfferModuleSupportTest {
+class OfferEventRegistryIT extends OfferModuleSupportTest {
 
     private static final Duration WAIT = Duration.ofSeconds(10);
 

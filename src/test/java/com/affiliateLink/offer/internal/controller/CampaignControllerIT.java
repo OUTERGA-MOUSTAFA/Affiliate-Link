@@ -42,7 +42,7 @@ import com.affiliateLink.offer.internal.entity.PayoutModel;
 import com.affiliateLink.offer.internal.service.CampaignService;
 
 @WebMvcTest(CampaignController.class)
-class CampaignControllerTest {
+class CampaignControllerIT {
 
     private static final String VALID = """
             {"name":"Winter Sale","startDate":"2026-11-10","endDate":"2027-01-31",
