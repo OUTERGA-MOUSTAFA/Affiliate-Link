@@ -22,10 +22,10 @@ spring:
         max-page-size: 100 
   jpa:
     hibernate:
-      default_batch_fetch_size: 20  # batch size، Hibernate كيجيبهم بـ query وحدة لكل 20 عرض
       ddl-auto: validate
     properties:
       hibernate:
+        default_batch_fetch_size: 20  # batch size، Hibernate كيجيبهم بـ query وحدة لكل 20 عرض
         format_sql: true
   
   flyway:
