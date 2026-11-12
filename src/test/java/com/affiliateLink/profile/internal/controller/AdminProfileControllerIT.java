@@ -21,7 +21,7 @@ import com.affiliateLink.profile.internal.entity.ProfileStatus;
 import com.affiliateLink.profile.internal.service.AdminProfileService;
 
 @WebMvcTest(AdminProfileController.class)
-class AdminProfileControllerTest {
+class AdminProfileControllerIT {
 
     @Autowired MockMvc mockMvc;
     @MockitoBean AdminProfileService adminProfileService;

@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.affiliateLink.common.Niche;   // بدلو على حسب فين كاين enum Niche عندك
+import com.affiliateLink.common.Niche; // بدلو على حسب فين كاين enum Niche عندك
 import com.affiliateLink.offer.internal.entity.Offer;
 import com.affiliateLink.offer.internal.entity.Tag;
 
@@ -15,9 +15,9 @@ public final class OfferSpecifications {
     private OfferSpecifications() {
     }
 
-    // كل باراميتر null (ولا فارغ) كيتتجاهل. 
+    // كل باراميتر null (ولا فارغ) كيتتجاهل.
     public static Specification<Offer> search(Niche niche, Long advertiserId, String tag, String keyword) {
-        Specification<Offer> spec = (root, query, cb) -> cb.conjunction();   // أصل خاوي = بلا فلتر
+        Specification<Offer> spec = (root, query, cb) -> cb.conjunction(); // أصل خاوي = بلا فلتر
 
         if (niche != null) {
             spec = spec.and(hasNiche(niche));
@@ -43,7 +43,7 @@ public final class OfferSpecifications {
     }
 
     private static Specification<Offer> hasTag(String tag) {
-        String normalized = tag.trim().toLowerCase(Locale.ROOT);   // الـ tags محفوظين بحروف صغيرة
+        String normalized = tag.trim().toLowerCase(Locale.ROOT); // الـ tags محفوظين بحروف صغيرة
         return (root, query, cb) -> {
             Join<Offer, Tag> tags = root.join("tags");
             return cb.equal(tags.get("name"), normalized);
