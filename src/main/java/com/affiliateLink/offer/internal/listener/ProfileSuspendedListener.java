@@ -29,7 +29,7 @@ import com.affiliateLink.profile.ProfileSuspended;
                                                     */
                 .findByOfferAdvertiserIdAndStatus(event.profileId(), CampaignStatus.ACTIVE);
 
-        active.forEach(Campaign::pause);// hna katgo lih dez 3la kela compaign o dir liha pause
+        active.forEach(Campaign::pause);// hna katgolih dez 3la kela compaign o dir liha pause
         log.info("Advertiser {} suspended: {} campaign(s) paused", event.profileId(), active.size());
     }
 }
