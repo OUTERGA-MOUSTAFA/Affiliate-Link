@@ -7,8 +7,14 @@
   <img src="https://img.shields.io/badge/MapStruct-1.6.3-orange" alt="MapStruct 1.6.3">
   <img src="https://img.shields.io/badge/license-MIT-lightgrey" alt="License MIT">
 </p>
+<p align="center">
+  <img src="https://img.shields.io/badge/tests-239%20passed-brightgreen?logo=junit5" alt="239 tests">
+  <img src="https://img.shields.io/badge/coverage-91.8%25-brightgreen" alt="Coverage 91.8%">
+  <img src="https://img.shields.io/badge/quality%20gate-passed-brightgreen?logo=sonarqube" alt="Quality Gate Passed">
+  <img src="https://img.shields.io/badge/Testcontainers-2.0.5-2496ED?logo=docker" alt="Testcontainers 2.0.5">
+</p>
 
-<h1 align="center">AffiliateLink — Profile & Offer Modules</h1>
+<h1 align="center">AffiliateLink — Affiliate Platform</h1>
 
 <p align="center">
   <a href="./README.md">🇫🇷 Version française</a>
@@ -20,6 +26,8 @@
 - The **offer** module lets an active advertiser publish offers, then launch campaigns that set the period, budget and payout model for publishers (CPC, CPL or CPA).
 
 The two modules are independent: they communicate only through their **public APIs** or through **events**, never by accessing the other's classes or tables.
+
+The project is protected by **239 automated tests** (unit, repository, controller, module and full integration), **JaCoCo** coverage measurement and a **SonarQube** analysis: see [Tests](#tests) and [Code quality](#code-quality).
 
 ## Table of contents
 
@@ -35,6 +43,7 @@ The two modules are independent: they communicate only through their **public AP
 - [Transactions and logging](#transactions-and-logging)
 - [Troubleshooting](#troubleshooting)
 - [Tests](#tests)
+- [Code quality](#code-quality)
 - [Design decisions](#design-decisions)
 - [Known limitations](#known-limitations)
 
@@ -137,6 +146,10 @@ Any other transition throws an `InvalidStatusTransitionException` (HTTP 409).
 | Logging | SLF4J / Logback (console + rolling file) |
 | Local environment | Docker Compose (started automatically by Spring Boot) |
 | Build | Maven (wrapper included) |
+| Tests | JUnit Jupiter, Mockito, AssertJ, Spring Boot Test, Spring Modulith Test |
+| Integration tests | Testcontainers 2.0.5 (PostgreSQL 18 in Docker), Awaitility |
+| Coverage | JaCoCo 0.8.13 (threshold: 60% of lines) |
+| Quality | SonarQube Community Build (Docker, local) |
 
 ## Architecture
 
@@ -145,8 +158,7 @@ Organized **by feature** (package-by-feature). Every direct sub-package of the m
 ```
 com.affiliateLink
 ├── common                               (open, shared module)
-│   ├── GlobalExceptionHandler           (@RestControllerAdvice)
-│   ├── ErrorResponse
+│   ├── GlobalExceptionHandler           (@RestControllerAdvice → ProblemDetail)
 │   ├── Niche                            (enum shared by profile / offer)
 │   ├── ResourceNotFoundException        → 404
 │   ├── ConflictException                → 409
@@ -270,6 +282,7 @@ offer_campaigns (id, offer_id FK, name, start_date, end_date, budget,
 | `V6` | `offer_campaigns` |
 | `V7` | `offer_tags` |
 | `V8` | `offer_offer_tags` (join table) |
+| `V9` | Drops the unique constraint on the publishers' first name |
 
 Key points:
 
@@ -294,7 +307,7 @@ Tables are created and versioned through Flyway (`src/main/resources/db/migratio
 ./mvnw spring-boot:run
 ```
 
-Spring Boot automatically detects `docker-compose.yml` and starts PostgreSQL before launching the application. Flyway applies the migrations on startup (`V1` to `V8`).
+Spring Boot automatically detects `docker-compose.yml` and starts PostgreSQL before launching the application (the container keeps running after the application stops: `lifecycle-management: start-only`). Flyway applies the migrations on startup (`V1` to `V9`).
 
 The API is available at `http://localhost:8080`.
 
@@ -337,7 +350,7 @@ spring:
   docker:
     compose:
       enabled: true
-      lifecycle-management: start-and-stop
+      lifecycle-management: start-only    # PostgreSQL keeps running after the application stops
   jpa:
     hibernate:
       ddl-auto: validate
@@ -354,7 +367,37 @@ spring:
         max-page-size: 100                # prevents ?size=100000
   modulith:
     events:
-      republish-outstanding-events-on-restart: true
+      jdbc:
+        schema-initialization:
+          enabled: false                  # the event_publication table is created by Flyway (V4)
+```
+
+During tests, the `application.yml` database is **never** used: Testcontainers provides a throwaway PostgreSQL 18, and Spring Boot ignores `docker-compose.yml` in tests.
+
+### `docker-compose.sonar.yml`
+
+SonarQube Community, for local quality analysis (see [SonarQube analysis](#sonarqube-analysis-local)). It is deliberately **separate** from `docker-compose.yml`: otherwise Spring Boot would start SonarQube (about 2 GB of RAM) every time the application starts.
+
+```yaml
+name: affiliatelink-sonar
+
+services:
+  sonarqube:
+    image: sonarqube:community
+    container_name: affiliatelink-sonarqube
+    ports:
+      - "9000:9000"
+    environment:
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+
+volumes:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
 ```
 
 ### Logging — `logback-spring.xml`
@@ -490,13 +533,19 @@ All errors are centralized in a single `@RestControllerAdvice` (`GlobalException
 | `409` | Inactive advertiser, email already used, forbidden status transition, integrity conflict |
 | `500` | Unexpected error: details in the logs only, generic message for the client |
 
-Error format:
+Error format: **`ProblemDetail`** (RFC 9457), with `Content-Type: application/problem+json`.
 
 ```json
 {
-  "message": "Advertiser is not active"
+  "type": "about:blank",
+  "title": "Conflict",
+  "status": 409,
+  "detail": "Advertiser is not active",
+  "instance": "/api/offres"
 }
 ```
+
+For a validation error, `detail` lists the invalid fields (`email: must be a well-formed email address; ...`). For a `500` error, the client only receives `Internal server error`.
 
 ## Transactions and logging
 
@@ -538,27 +587,191 @@ An already-applied migration was modified (typically: a file created empty while
 **`Unresolved compilation problem` / `TestMapper cannot be resolved`**
 A MapStruct-generated `*MapperImpl` class is still in `target/classes` although the interface was deleted. Run `./mvnw clean compile` (and, in VS Code, `Java: Clean Java Language Server Workspace`).
 
+**`Unresolved compilation problems` during `./mvnw verify`, although the code compiles**
+This message comes from VS Code's compiler (Eclipse JDT), never from `javac`: VS Code recompiled into `target/` at the same time as Maven. Run the command again; if the error comes back, turn off `Java: Build Automatically` (or close VS Code) during the build.
+
 **`logs/affiliatelink.log` is not created / `XML_PARSING` error at startup**
 `logback-spring.xml` must start with `<?xml ...?>` on the **very first line**, with no blank line or BOM before it.
 
 **`./mvnw test -Dtest=ModularityTest` fails (`depends on non-exposed type`)**
 A module uses a class from another module's `internal` package. A listener must live in the module that **reacts** to the event (here `offer`) and only import the root of the other module.
 
+**`Query validation failed for '...'` at startup**
+Spring Data validates every `@Query` at startup: an invalid JPQL query prevents the whole context from loading, and makes every test that starts Spring fail. Check the `SELECT c FROM Campaign c WHERE ...` shape, the exact entity and field names, and named parameters written without a space (`:status`).
+
+**Tests: `Connection to 127.0.0.1:5433 refused`**
+A test that starts Spring uses the `application.yml` database instead of Testcontainers. Add `@Import(PostgresTestConfiguration.class)` to it, or make it extend `AbstractIntegrationTest`.
+
+**Tests: `Could not find a valid Docker environment`**
+Testcontainers needs Docker: start Docker Desktop before `./mvnw verify`.
+
+**`'build.plugins.plugin.version' ... must be a valid version but is '${jacoco.version}'`**
+The `jacoco.version` property is missing from the `pom.xml` `<properties>`.
+
+**PowerShell: `-Dsonar : The term '-Dsonar' is not recognized`**
+The command suggested by SonarQube is written for bash: the trailing `\` does not exist in PowerShell. Pass the token through the `SONAR_TOKEN` variable and run a single line (see [SonarQube analysis](#sonarqube-analysis-local)).
+
 ## Tests
 
+Brief 4 adds a **safety net**: automated tests that check the business rules on every build, at every level of the application.
+
+### Running the tests
+
 ```bash
-./mvnw test
+./mvnw test       # unit tests (*Test): a few seconds, no Docker
 ```
 
-| Test | Target |
+```bash
+./mvnw verify     # unit + integration (*IT) + JaCoCo report + coverage threshold
+```
+
+`./mvnw clean verify` passes on a machine that **only has Java 17 and Docker**:
+
+- no Maven to install: the `mvnw` wrapper downloads it;
+- no local PostgreSQL: **Testcontainers** starts a throwaway PostgreSQL 18 (`PostgresTestConfiguration`, `@ServiceConnection`);
+- `docker-compose.yml` does not need to be running.
+
+### Naming convention
+
+| Suffix | Run by | Maven phase | Content |
+|---|---|---|---|
+| `*Test` | Surefire | `test` | Tests without Spring or a database |
+| `*IT` | Failsafe | `integration-test` | Tests that start Spring and/or PostgreSQL |
+
+Shared support classes (no tests of their own): `AbstractIntegrationTest` (base of the full integration tests), `OfferModuleSupportTest` (base of the offer module tests), `PostgresTestConfiguration` (PostgreSQL container) and `ProblemDetailMatchers` (assertions on error content).
+
+### Test pyramid
+
+| Level | Tools | Classes | Tests |
+|---|---|---|---|
+| Unit | JUnit, Mockito, AssertJ | 14 | 58 |
+| Repository and migrations | `@DataJpaTest`, Testcontainers | 6 | 62 |
+| Controller | `@WebMvcTest`, `@MockitoBean` | 5 | 60 |
+| Mapper | `@SpringJUnitConfig` | 1 | 3 |
+| Module | `@ApplicationModuleTest`, Testcontainers | 3 | 14 |
+| Full integration | `@SpringBootTest`, MockMvc, Testcontainers | 4 | 42 |
+| **Total** | | **33** | **239** |
+
+### Details by level
+
+**Unit (`*Test`)**: no Spring, no database, dependencies mocked with Mockito.
+
+| Class | What it checks |
 |---|---|
-| `ModularityTest` | `ApplicationModules.of(...).verify()`: module isolation, no circular dependency |
-| `CampaignTransitionTest` | Campaign status transitions |
-| `CampaignCreateRequestTest` | Conditional validation of amounts and dates |
-| `OfferMapperTest` | MapStruct mappers (no database, no server) |
-| `OfferServiceTest`, `CampaignServiceTest` | Services, dependencies mocked (Mockito) |
+| `CampaignTransitionTest` | Every campaign status transition, allowed and forbidden (`@ParameterizedTest`) |
+| `CampaignEndDateTest` | A campaign whose end date has passed cannot be activated |
+| `CampaignCreateRequestTest` | Payout rules (amount > 0, percentage ≤ 100) and `endDate` after `startDate` |
+| `TagTest` | Tag normalization (lowercase, no spaces) |
+| `AdvertiserServiceImplTest` | Profile created as `PENDING`, email already used refused without any `save`, unknown profile |
+| `CampaignServiceTest` | Campaign creation (active or inactive advertiser, unknown offer) and exclusive activation |
+| `OfferServiceTest` | Offer update, unknown offer, inactive advertiser |
 | `ProfileApiImplTest`, `OfferApiImplTest` | Public module APIs |
-| `ProfileSuspendedListenerTest`, `PublisherNotificationListenerTest` | Event listeners |
+| `ProfileSuspendedListenerTest`, `PublisherNotificationListenerTest` | `ProfileSuspended` listeners |
+| `LogNotificationSenderTest` | Sending (logging) notifications |
+| `GlobalExceptionHandlerTest` | Translating exceptions into `ProblemDetail` |
+| `ModularityTest` | `ApplicationModules.of(...).verify()`: no access to an `internal` package, no circular dependency |
+
+**Repository and migrations (`*IT`)**: `@DataJpaTest` on a real PostgreSQL 18.
+
+| Class | What it checks |
+|---|---|
+| `OfferSpecificationsIT` | Offer search: each criterion alone, a combination, no criterion |
+| `OfferPaginationIT` | Offer pagination and sorting |
+| `CampaignRepositoryIT` | Campaign queries |
+| `TagRepositoryIT` | Tags are unique and shared between offers |
+| `ProfileRepositoriesIT` | Profile queries |
+| `MigrationsIT` | Flyway migrations: schema and database constraints |
+
+**Controller (`*IT`)**: `@WebMvcTest`, one test per controller, services replaced with `@MockitoBean`.
+
+`AdvertiserControllerIT`, `PublisherControllerIT`, `AdminProfileControllerIT`, `OfferControllerIT` and `CampaignControllerIT` check the `201`, `400`, `404` and `409` codes, with the `ProblemDetail` content for every error.
+
+**Module (`*IT`)**: `@ApplicationModuleTest`, one module started on its own.
+
+| Class | What it checks |
+|---|---|
+| `ProfileModuleIT` | Suspension publishes `ProfileSuspended`; activation publishes nothing |
+| `OfferModuleIT` | Listening to `ProfileSuspended` in the offer module, with `ProfileApi` replaced by a mock |
+| `OfferEventRegistryIT` | Event registry: a failing listener leaves the event incomplete |
+
+**Full integration (`*IT`)**: `@SpringBootTest`, end-to-end journeys, no mocks.
+
+| Class | Journey |
+|---|---|
+| `AdvertiserRegistrationIT` | An advertiser registers, then their profile is retrieved; registering twice with the same email (`409`, nothing is created) |
+| `CampaignJourneyIT` | Create an offer and two campaigns, successive activations: the first one becomes `PAUSED` |
+| `OfferSearchIT` | Paginated and sorted search, single and combined criteria |
+| `AdvertiserSuspensionIT` | Suspending an advertiser: its active campaigns become `PAUSED`, the others do not change |
+
+### Rules followed
+
+- **Given / When / Then** in every test, and a method name that describes the expected behavior (e.g. `registeringTwiceWithTheSameEmailIsRefusedAndCreatesNothing`).
+- **Independent tests**: the database is emptied before each full integration test (`TRUNCATE ... RESTART IDENTITY CASCADE` in `AbstractIntegrationTest`), and emails are generated (`UUID`) when uniqueness matters.
+- **Asynchronous listeners**: tests wait for the effect with **Awaitility**, without `Thread.sleep`, and without `@Transactional` on the test (otherwise the listener, which runs after the commit, would never be called).
+
+## Code quality
+
+### Coverage — JaCoCo
+
+`./mvnw verify` generates the report in `target/site/jacoco/index.html` (plus `jacoco.xml`, read by SonarQube). The JaCoCo plugin:
+
+- instruments **both** test families (`prepare-agent` feeds Surefire and Failsafe);
+- **fails the build** if fewer than **60% of lines** are covered (`check` rule, `LINE` counter);
+- excludes the main class, configuration, DTOs and MapStruct-generated code (the project does not use Lombok).
+
+| JaCoCo exclusion (`.class`) | SonarQube exclusion (`.java`) |
+|---|---|
+| `**/AffiliateLinkApplication.class` | `**/AffiliateLinkApplication.java` |
+| `**/*Config*.class` | `**/*Config*.java` |
+| `**/dto/**` | `**/dto/**` |
+| `**/*MapperImpl.class` | `**/*MapperImpl.java` |
+
+**Result: 93.2% of lines covered** (required threshold: 60%).
+
+### SonarQube analysis (local)
+
+1. Start SonarQube (with Docker Desktop running), then wait for `SonarQube is operational` in the container logs:
+
+   ```bash
+   docker compose -f docker-compose.sonar.yml up -d
+   ```
+
+2. Open `http://localhost:9000` (first login: `admin` / `admin`, then change the password).
+3. Create a local project with the key **`affiliatelink`** (the one in `pom.xml`), then generate a **token**.
+4. Run the analysis. The `sonar.*` parameters are already in `pom.xml`: only the token has to be provided.
+
+   ```bash
+   export SONAR_TOKEN=<your_token>
+   ./mvnw clean verify sonar:sonar
+   ```
+
+   In PowerShell:
+
+   ```powershell
+   $env:SONAR_TOKEN="<your_token>"
+   .\mvnw.cmd clean verify sonar:sonar
+   ```
+
+5. Stop SonarQube, without `-v` to keep the analyses:
+
+   ```bash
+   docker compose -f docker-compose.sonar.yml down
+   ```
+
+> The token is a secret: it must appear neither in `pom.xml` nor in any versioned file.
+
+**Latest analysis result**
+
+| Metric | Value |
+|---|---|
+| Quality Gate | ✅ **Passed** (all conditions met) |
+| Issues (overall code) | 2 |
+| Duplications | 0.0% |
+| Coverage | 91.8% |
+
+![SonarQube dashboard of the AffiliateLink project](docs/images/sonarqube-overview.png)
+
+The coverage shown by SonarQube (91.8%) differs slightly from JaCoCo's (93.2%): SonarQube combines **line** coverage and **condition** coverage (both branches of an `if`), whereas the JaCoCo rule only counts lines.
 
 ## Design decisions
 
@@ -578,7 +791,8 @@ A module uses a class from another module's `internal` package. A listener must 
 - **Publisher notification**: until the `affiliate` module exists, nothing links a publisher to a campaign. The notification is therefore aimed at **all active publishers**, and it is limited to a log message.
 - Reactivating an advertiser does **not** automatically reactivate its campaigns: they stay `PAUSED` and the advertiser reactivates them explicitly.
 - `OfferApi` is deliberately minimal (a single method): it anticipates the future `affiliate` module.
+- **Reactivating a campaign during a suspension**: `CampaignServiceImpl.changeStatus()` does not check that the advertiser is active. A suspended advertiser can therefore set a `PAUSED` campaign back to `ACTIVE` (`PATCH /api/campaigns/{id}/status`).
 
 ---
 
-<p align="center"><sub>Sprint 3 — Brief 3 · AffiliateLink · OUTERGA MOUSTAFA</sub></p>
+<p align="center"><sub>Sprint 3 — Briefs 3 & 4 · AffiliateLink · OUTERGA MOUSTAFA</sub></p>
