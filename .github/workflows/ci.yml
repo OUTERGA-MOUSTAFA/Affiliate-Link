@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, devlop ]
+  pull_request:
+    branches: [ main, devlop ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v5
+
+      - name: Installer Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      # Tests unitaires (*Test), tests d'intégration (*IT) avec Testcontainers,
+      # rapport JaCoCo et seuil de couverture (60 % des lignes)
+      - name: Build, tests et couverture
+        run: ./mvnw -B clean verify
+
+      - name: Publier le rapport JaCoCo
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/
