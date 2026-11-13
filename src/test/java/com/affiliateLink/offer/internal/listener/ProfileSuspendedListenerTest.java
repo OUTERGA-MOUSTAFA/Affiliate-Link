@@ -1,6 +1,8 @@
 package com.affiliateLink.offer.internal.listener;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -47,11 +49,15 @@ class ProfileSuspendedListenerTest {
 
     @Test
     void doesNothingWhenAdvertiserHasNoActiveCampaign() {
+        // Given
         when(campaignRepository.findByOfferAdvertiserIdAndStatus(7L, CampaignStatus.ACTIVE))
                 .thenReturn(List.of());
 
-        listener.on(new ProfileSuspended(7L));   // ما خاصو يطيح
+        // When
+        listener.on(new ProfileSuspended(7L));
 
-        // ما كاين والو نتأكدو منو: الاختبار ينجح إلا ما رمى حتى exception
+        // Then : le repository a été interrogé une fois, et rien d'autre (aucun save)
+        verify(campaignRepository).findByOfferAdvertiserIdAndStatus(7L, CampaignStatus.ACTIVE);
+        verifyNoMoreInteractions(campaignRepository);
     }
 }
