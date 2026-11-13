@@ -1,7 +1,5 @@
 package com.affiliateLink.profile.internal.entity;
 
-import org.springframework.context.annotation.Configuration;
-
 import com.affiliateLink.common.Niche;
 
 import jakarta.persistence.Column;
@@ -10,7 +8,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
-@Configuration 
+
 @Entity
 @Table(name = "profile_publishers")
 @PrimaryKeyJoinColumn(name = "id")
